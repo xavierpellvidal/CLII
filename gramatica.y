@@ -1254,6 +1254,20 @@ declarator : IDENTIFIER 	{
 							if(info.isFunctionDeclaration == 0){
 								info.tipus = FUNCTION;
 								info.tipusFunction = tipus_declaracio;
+								
+								/*Funcio de CL2*/
+								if (info.tipusFunction != ID_VOID){
+									filaAux = inicialitzarFila(filaAux);
+									strcpy(filaAux.nom, "return");
+											
+									filaAux.mida = obtenirMida(info.tipusFunction);
+									filaAux.offset = offsetL;
+										
+									offsetL += filaAux.mida;
+									
+									localRA = introduirFila(filaAux, localRA);
+								}
+								
 								info.nParamsFuncio = 0;
 								sym_remove(nom_funcio);
 								sym_global_add(nom_funcio,&info);
@@ -1287,6 +1301,20 @@ declarator : IDENTIFIER 	{
 												if(info.tipus == UNDEF){
 													info.tipus = FUNCTION;
 													info.tipusFunction = tipus_declaracio;
+													
+													/*Funcio de CL2*/
+													if (info.tipusFunction != ID_VOID){
+														filaAux = inicialitzarFila(filaAux);
+														strcpy(filaAux.nom, "return");
+																
+														filaAux.mida = obtenirMida(info.tipusFunction);
+														filaAux.offset = offsetL;
+															
+														offsetL += filaAux.mida;
+														
+														localRA = introduirFila(filaAux, localRA);
+													}
+													
 													info.nParamsFuncio = 0;
 													sym_global_remove(nom_id);
 													sym_global_add(nom_id,&info);
@@ -1767,18 +1795,7 @@ function_definition : declarator {
 													error_sym = sym_pop_scope();
 													
 													error_sym=sym_global_lookup(nom_funcio,&info);
-													if (info.tipusFunction != ID_VOID){
-														filaAux = inicialitzarFila(filaAux);
-														strcpy(filaAux.nom, "return");
-														
-														filaAux.mida = obtenirMida(info.tipusFunction);
-														filaAux.offset = offsetL;
-														
-														offsetL += filaAux.mida;
-														
-														localRA = introduirFila(filaAux, localRA);
-													}
-													
+																										
 													if (error_sym!=SYMTAB_OK){
 														sprintf(string,"ERROR. No s'ha pogut desapilar el ambit %s.", nom_ambit);
 														missatgeError(string,$1.rows, $1.columns);
@@ -1861,17 +1878,7 @@ function_definition : declarator {
 															error_sym = sym_pop_scope();
 															
 															error_sym=sym_global_lookup(nom_funcio,&info);
-															if (info.tipusFunction != ID_VOID){
-																filaAux = inicialitzarFila(filaAux);
-																strcpy(filaAux.nom, "return");
-																
-																filaAux.mida = obtenirMida(info.tipusFunction);
-																filaAux.offset = offsetL;
-																
-																offsetL += filaAux.mida;
-																
-																localRA = introduirFila(filaAux, localRA);
-															}
+															
 															
 															if (error_sym!=SYMTAB_OK){
 																sprintf(string,"ERROR. No s'ha pogut desapilar el ambit %s.", nom_ambit);
