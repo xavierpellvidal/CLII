@@ -11,5 +11,6 @@ Nom: f				 Mida: 4	 Offset: 0
 Taula global:
 Nom: x				 Mida: 4	 Offset: 0	 
 Nom: z				 Mida: 4	 Offset: 4	 
-Nom: g				 Mida: 4	 Offset: 8	 
+Nom: h				 Mida: 4	 Offset: 8	 
+Nom: g				 Mida: 4	 Offset: 12	 
 ------------------------------------------------ 

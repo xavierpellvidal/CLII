@@ -1258,7 +1258,7 @@ declarator : IDENTIFIER 	{
 								/*Funcio de CL2*/
 								if (info.tipusFunction != ID_VOID){
 									filaAux = inicialitzarFila(filaAux);
-									strcpy(filaAux.nom, "return");
+									filaAux.nom = "return";
 											
 									filaAux.mida = obtenirMida(info.tipusFunction);
 									filaAux.offset = offsetL;
@@ -1305,7 +1305,7 @@ declarator : IDENTIFIER 	{
 													/*Funcio de CL2*/
 													if (info.tipusFunction != ID_VOID){
 														filaAux = inicialitzarFila(filaAux);
-														strcpy(filaAux.nom, "return");
+														filaAux.nom = "return";
 																
 														filaAux.mida = obtenirMida(info.tipusFunction);
 														filaAux.offset = offsetL;
@@ -1395,7 +1395,7 @@ parameter_declaration : declaration_specifiers declarator {
 												
 												
 												filaAux = inicialitzarFila(filaAux);
-												strcpy(filaAux.nom, $2.lexema);
+												filaAux.nom = $2.lexema;
 												
 												filaAux.mida = obtenirMida($1.tipus);
 												filaAux.offset = offsetL;
@@ -1453,7 +1453,7 @@ parameter_declaration : declaration_specifiers declarator {
 								
 								
 								filaAux = inicialitzarFila(filaAux);
-								strcpy(filaAux.nom, "NULL");
+								filaAux.nom = "NULL";
 								
 								filaAux.mida = obtenirMida($1.tipus);
 								filaAux.offset = offsetL;

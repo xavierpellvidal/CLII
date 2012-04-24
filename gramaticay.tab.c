@@ -3583,7 +3583,7 @@ yyreduce:
 								/*Funcio de CL2*/
 								if (info.tipusFunction != ID_VOID){
 									filaAux = inicialitzarFila(filaAux);
-									strcpy(filaAux.nom, "return");
+									filaAux.nom = "return";
 											
 									filaAux.mida = obtenirMida(info.tipusFunction);
 									filaAux.offset = offsetL;
@@ -3649,7 +3649,7 @@ yyreduce:
 													/*Funcio de CL2*/
 													if (info.tipusFunction != ID_VOID){
 														filaAux = inicialitzarFila(filaAux);
-														strcpy(filaAux.nom, "return");
+														filaAux.nom = "return";
 																
 														filaAux.mida = obtenirMida(info.tipusFunction);
 														filaAux.offset = offsetL;
@@ -3759,7 +3759,7 @@ yyreduce:
 												
 												
 												filaAux = inicialitzarFila(filaAux);
-												strcpy(filaAux.nom, (yyvsp[(2) - (2)].ident).lexema);
+												filaAux.nom = (yyvsp[(2) - (2)].ident).lexema;
 												
 												filaAux.mida = obtenirMida((yyvsp[(1) - (2)].ident).tipus);
 												filaAux.offset = offsetL;
@@ -3829,7 +3829,7 @@ yyreduce:
 								
 								
 								filaAux = inicialitzarFila(filaAux);
-								strcpy(filaAux.nom, "NULL");
+								filaAux.nom = "NULL";
 								
 								filaAux.mida = obtenirMida((yyvsp[(1) - (1)].ident).tipus);
 								filaAux.offset = offsetL;

@@ -36,7 +36,7 @@ void imprimirTaula(taula t, char* nom){
 }
 
 fila inicialitzarFila(fila fil){
-	fil.offset = 990;
+	fil.offset = 0;
 	fil.mida = 0;
 	fil.nom = (char*)malloc(20*sizeof(char));
 	
@@ -60,7 +60,7 @@ taula inicialitzarTaula(taula t){
 
 taula esborrarTaula(taula t){
 	int i;
-	for(i = 0; i < t.nFiles; i++){
+	for(i = 0; i < 100; i++){
 		t.registre[i].offset = 0;
 		t.registre[i].mida = 0;
 		t.registre[i].nom = (char*)malloc(20*sizeof(char));
