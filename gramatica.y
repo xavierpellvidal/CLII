@@ -911,8 +911,10 @@ init_declarator : declarator 		{
 											missatgeTS(string,$1.rows, $1.columns);
 											
 											
-											inicialitzarFila(filaAux);
-											strcpy(filaAux.nom, $1.lexema);
+											
+											filaAux = inicialitzarFila(filaAux);
+											
+											filaAux.nom = $1.lexema;
 											
 											filaAux.mida = obtenirMida(info.tipus);
 											
@@ -930,9 +932,11 @@ init_declarator : declarator 		{
 												}
 											}else{
 												if (ambit_actual==SYM_ROOT_SCOPE){
+											
 													filaAux.offset = offsetG;
 													offsetG += filaAux.mida;
 													globalRA = introduirFila(filaAux, globalRA);
+													
 												}
 												else{
 													filaAux.offset = offsetL;
@@ -1362,7 +1366,7 @@ parameter_declaration : declaration_specifiers declarator {
 												
 												
 												
-												inicialitzarFila(filaAux);
+												filaAux = inicialitzarFila(filaAux);
 												strcpy(filaAux.nom, $2.lexema);
 												
 												filaAux.mida = obtenirMida($1.tipus);
@@ -1420,7 +1424,7 @@ parameter_declaration : declaration_specifiers declarator {
 								
 								
 								
-								inicialitzarFila(filaAux);
+								filaAux = inicialitzarFila(filaAux);
 								strcpy(filaAux.nom, "NULL");
 								
 								filaAux.mida = obtenirMida($1.tipus);
@@ -1764,7 +1768,7 @@ function_definition : declarator {
 													
 													error_sym=sym_global_lookup(nom_funcio,&info);
 													if (info.tipusFunction != ID_VOID){
-														inicialitzarFila(filaAux);
+														filaAux = inicialitzarFila(filaAux);
 														strcpy(filaAux.nom, "return");
 														
 														filaAux.mida = obtenirMida(info.tipusFunction);
@@ -1780,9 +1784,17 @@ function_definition : declarator {
 														missatgeError(string,$1.rows, $1.columns);
 														YYERROR;
 													}else{
+													
+													
 														sprintf(string, "Desapilat correctament l'ambit %s amb codi %d",nom_ambit,ambit_actual);
+														
+														
 														missatgeTS(string,$1.rows, $1.columns);
 														sprintf(string, "Funcio %s", nom_funcio);
+														
+														
+														
+														
 														imprimirTaula(localRA, string);
 														localRA = esborrarTaula(localRA);
 														offsetL = 0;
@@ -1850,7 +1862,7 @@ function_definition : declarator {
 															
 															error_sym=sym_global_lookup(nom_funcio,&info);
 															if (info.tipusFunction != ID_VOID){
-																inicialitzarFila(filaAux);
+																filaAux = inicialitzarFila(filaAux);
 																strcpy(filaAux.nom, "return");
 																
 																filaAux.mida = obtenirMida(info.tipusFunction);
@@ -1865,10 +1877,14 @@ function_definition : declarator {
 																sprintf(string,"ERROR. No s'ha pogut desapilar el ambit %s.", nom_ambit);
 																missatgeError(string,$2.rows, $2.columns);
 															}else{
+															
+															
 																sprintf(string, "Desapilat correctament l'ambit %s amb codi %d",nom_ambit,ambit_actual);
+																
 																missatgeTS(string,$2.rows, $2.columns);
 																sprintf(string, "Funcio %s", nom_funcio);
 																imprimirTaula(localRA, string);
+																																
 																localRA = esborrarTaula(localRA);
 																offsetL = 0;
 															}
@@ -1921,8 +1937,8 @@ int init_analisi_sintactic(char* filename){
 		}
 	}
 	
-	inicialitzarTaula(localRA);
-	inicialitzarTaula(globalRA);
+	localRA = inicialitzarTaula(localRA);
+	globalRA = inicialitzarTaula(globalRA);
 	inicialitzarFitxer(filename);
 	
 	

@@ -14,13 +14,14 @@ void inicialitzarFitxer(char* nom){
 taula introduirFila(fila fil, taula t){
 	t.registre[t.nFiles] = fil;
 	t.nFiles ++;
+	
 	return t;
 }
 
 void imprimirTaula(taula t, char* nom){
 	int i = 0;
 	fila aux;
-	char string[20];
+	char string[100];
 	
 	strcpy(string,"");
 	
@@ -34,14 +35,27 @@ void imprimirTaula(taula t, char* nom){
 	fprintf(dFile, "------------------------------------------------ \n");
 }
 
-void inicialitzarFila(fila fil){
-	fil.offset = 0;
+fila inicialitzarFila(fila fil){
+	fil.offset = 990;
 	fil.mida = 0;
-	strcpy(fil.nom, " ");
+	fil.nom = (char*)malloc(20*sizeof(char));
+	
+	return fil;
 }
 
-void inicialitzarTaula(taula t){
+taula inicialitzarTaula(taula t){
+	int i;
+	
+	t.registre = (fila*)malloc(100*sizeof(fila));
+	
+	for(i = 0; i < 100; i++){
+		t.registre[i].offset = 0;
+		t.registre[i].mida = 0;
+		t.registre[i].nom = (char*)malloc(20*sizeof(char));
+	}
 	t.nFiles = 0;
+	
+	return t;
 }
 
 taula esborrarTaula(taula t){
@@ -49,7 +63,7 @@ taula esborrarTaula(taula t){
 	for(i = 0; i < t.nFiles; i++){
 		t.registre[i].offset = 0;
 		t.registre[i].mida = 0;
-		strcpy(t.registre[i].nom, " ");
+		t.registre[i].nom = (char*)malloc(20*sizeof(char));
 	}
 	t.nFiles = 0;
 	return t;
