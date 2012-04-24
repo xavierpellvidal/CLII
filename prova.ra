@@ -1,0 +1,15 @@
+Funcio main:
+Nom: d				 Mida: 4	 Offset: 0	 
+Nom: b				 Mida: 4	 Offset: 4	 
+Nom: f				 Mida: 4	 Offset: 8	 
+Nom: a				 Mida: 4	 Offset: 168	 
+Nom: return				 Mida: 4	 Offset: 172	 
+------------------------------------------------ 
+Funcio caca:
+Nom: f				 Mida: 4	 Offset: 0	 
+------------------------------------------------ 
+Taula global:
+Nom: x				 Mida: 4	 Offset: 0	 
+Nom: z				 Mida: 4	 Offset: 4	 
+Nom: g				 Mida: 4	 Offset: 8	 
+------------------------------------------------ 
