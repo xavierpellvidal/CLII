@@ -1,9 +1,7 @@
-
-main(){
-	float a, b, c; 
-	int x;
-	x = a + ( b * c );
-
+main(int g){
+	int a[8];
+	float x; 
+	x = a[7];
 }
 
 

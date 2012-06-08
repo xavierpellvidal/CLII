@@ -112,6 +112,7 @@ char *nom_funcio;
 char *punter;
 
 char *cast;
+char *op;
 
 taula globalRA, localRA;
 fila filaAux;
@@ -154,7 +155,7 @@ sym_value_type info, infoAux;
 
 
 /* Line 189 of yacc.c  */
-#line 158 "gramaticay.tab.c"
+#line 159 "gramaticay.tab.c"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -233,7 +234,7 @@ typedef union YYSTYPE
 {
 
 /* Line 214 of yacc.c  */
-#line 86 "gramatica.y"
+#line 87 "gramatica.y"
 
 	struct{
 		char *lexema;
@@ -250,7 +251,7 @@ typedef union YYSTYPE
 
 
 /* Line 214 of yacc.c  */
-#line 254 "gramaticay.tab.c"
+#line 255 "gramaticay.tab.c"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
@@ -262,7 +263,7 @@ typedef union YYSTYPE
 
 
 /* Line 264 of yacc.c  */
-#line 266 "gramaticay.tab.c"
+#line 267 "gramaticay.tab.c"
 
 #ifdef short
 # undef short
@@ -623,45 +624,24 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-<<<<<<< HEAD
-       0,   127,   127,   158,   161,   168,   178,   188,   198,   210,
-     214,   245,   245,   278,   278,   312,   314,   316,   320,   332,
-     345,   349,   351,   353,   363,   365,   369,   371,   373,   377,
-     381,   435,   439,   508,   575,   644,   648,   715,   783,   785,
-     804,   823,   841,   861,   863,   881,   901,   903,   923,   925,
-     945,   949,   953,   959,   963,  1032,  1034,  1036,  1038,  1040,
-    1042,  1046,  1048,  1052,  1054,  1073,  1110,  1114,  1118,  1121,
-    1127,  1129,  1133,  1202,  1261,  1266,  1271,  1276,  1282,  1287,
-    1292,  1297,  1301,  1307,  1335,  1338,  1342,  1346,  1350,  1352,
-    1356,  1360,  1362,  1366,  1370,  1436,  1438,  1475,  1475,  1511,
-    1513,  1543,  1546,  1548,  1552,  1626,  1628,  1684,  1687,  1693,
-    1697,  1701,  1703,  1707,  1709,  1711,  1713,  1715,  1717,  1719,
-    1723,  1725,  1727,  1731,  1742,  1755,  1757,  1759,  1761,  1763,
-    1765,  1769,  1771,  1775,  1775,  1793,  1793,  1810,  1810,  1827,
-    1827,  1846,  1848,  1852,  1854,  1859,  1861,  1863,  1867,  1869,
-    1871,  1873,  1875,  1877,  1879,  1881,  1883,  1885,  1889,  1891,
-    1893,  1909,  1928,  1931,  1934,  1937,  1939,  1942,  1942,  2050,
-    2052,  2052,  2142,  2144,  2146,  2149,  2152
-=======
-       0,   121,   121,   149,   152,   155,   161,   167,   173,   181,
-     185,   216,   216,   249,   249,   283,   285,   287,   291,   303,
-     316,   320,   322,   324,   326,   328,   332,   334,   336,   340,
-     344,   384,   388,   425,   461,   499,   503,   539,   576,   578,
-     597,   616,   634,   654,   656,   674,   694,   696,   716,   718,
-     738,   742,   746,   752,   756,   792,   794,   796,   798,   800,
-     802,   806,   808,   812,   814,   833,   870,   874,   878,   881,
-     887,   889,   893,   962,  1021,  1026,  1031,  1036,  1042,  1047,
-    1052,  1057,  1061,  1067,  1095,  1098,  1102,  1106,  1110,  1112,
-    1116,  1120,  1122,  1126,  1130,  1196,  1198,  1235,  1235,  1285,
-    1287,  1331,  1334,  1336,  1340,  1414,  1416,  1472,  1475,  1481,
-    1485,  1489,  1491,  1495,  1497,  1499,  1501,  1503,  1505,  1507,
-    1511,  1513,  1515,  1519,  1530,  1543,  1545,  1547,  1549,  1551,
-    1553,  1557,  1559,  1563,  1563,  1581,  1581,  1598,  1598,  1615,
-    1615,  1634,  1636,  1640,  1642,  1647,  1649,  1651,  1655,  1657,
-    1659,  1661,  1663,  1665,  1667,  1669,  1671,  1673,  1677,  1679,
-    1681,  1697,  1716,  1719,  1722,  1725,  1727,  1730,  1730,  1823,
-    1825,  1825,  1901,  1903,  1905,  1908,  1911
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+       0,   128,   128,   159,   162,   169,   179,   189,   199,   211,
+     215,   259,   259,   292,   292,   326,   328,   330,   334,   346,
+     359,   363,   365,   367,   377,   379,   383,   385,   387,   391,
+     395,   449,   453,   522,   589,   658,   662,   729,   797,   799,
+     818,   837,   855,   875,   877,   895,   915,   917,   937,   939,
+     959,   963,   967,   973,   977,  1045,  1047,  1049,  1051,  1053,
+    1055,  1059,  1061,  1065,  1067,  1086,  1123,  1127,  1131,  1134,
+    1140,  1142,  1146,  1215,  1274,  1279,  1284,  1289,  1295,  1300,
+    1305,  1310,  1314,  1320,  1348,  1351,  1355,  1359,  1363,  1365,
+    1369,  1373,  1375,  1379,  1383,  1449,  1451,  1488,  1488,  1538,
+    1540,  1584,  1587,  1589,  1593,  1667,  1669,  1725,  1728,  1734,
+    1738,  1742,  1744,  1748,  1750,  1752,  1754,  1756,  1758,  1760,
+    1764,  1766,  1768,  1772,  1783,  1796,  1798,  1800,  1802,  1804,
+    1806,  1810,  1812,  1816,  1816,  1834,  1834,  1851,  1851,  1868,
+    1868,  1887,  1889,  1893,  1895,  1900,  1902,  1904,  1908,  1910,
+    1912,  1914,  1916,  1918,  1920,  1922,  1924,  1926,  1930,  1932,
+    1934,  1950,  1969,  1972,  1975,  1978,  1980,  1983,  1983,  2086,
+    2088,  2088,  2173,  2175,  2177,  2180,  2183
 };
 #endif
 
@@ -1953,7 +1933,7 @@ yyreduce:
         case 2:
 
 /* Line 1464 of yacc.c  */
-#line 127 "gramatica.y"
+#line 128 "gramatica.y"
     {
 								inicialitzarInfo();
 								ambit_actual=sym_get_scope();
@@ -1990,7 +1970,7 @@ yyreduce:
   case 3:
 
 /* Line 1464 of yacc.c  */
-#line 158 "gramatica.y"
+#line 159 "gramatica.y"
     {
 								sprintf(string,"primary_expression <- constant ");
 								string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
@@ -1999,7 +1979,7 @@ yyreduce:
   case 4:
 
 /* Line 1464 of yacc.c  */
-#line 161 "gramatica.y"
+#line 162 "gramatica.y"
     {
 		
 								/*-----------------C3A------------------*/
@@ -2012,7 +1992,7 @@ yyreduce:
   case 5:
 
 /* Line 1464 of yacc.c  */
-#line 168 "gramatica.y"
+#line 169 "gramatica.y"
     {
 								(yyval.ident).tipus = (yyvsp[(2) - (3)].ident).tipus;
 								
@@ -2026,7 +2006,7 @@ yyreduce:
   case 6:
 
 /* Line 1464 of yacc.c  */
-#line 178 "gramatica.y"
+#line 179 "gramatica.y"
     {
 							(yyval.ident).tipus = ID_INT;
 							(yyval.ident).sizeList = UNDEF;
@@ -2042,7 +2022,7 @@ yyreduce:
   case 7:
 
 /* Line 1464 of yacc.c  */
-#line 188 "gramatica.y"
+#line 189 "gramatica.y"
     {
 							(yyval.ident).tipus = ID_CHAR;
 							(yyval.ident).sizeList = UNDEF;
@@ -2058,7 +2038,7 @@ yyreduce:
   case 8:
 
 /* Line 1464 of yacc.c  */
-#line 198 "gramatica.y"
+#line 199 "gramatica.y"
     {
 							(yyval.ident).tipus = ID_FLOAT;
 							(yyval.ident).sizeList = UNDEF;
@@ -2074,7 +2054,7 @@ yyreduce:
   case 9:
 
 /* Line 1464 of yacc.c  */
-#line 210 "gramatica.y"
+#line 211 "gramatica.y"
     {
 											(yyval.ident) = (yyvsp[(1) - (1)].ident);
 											sprintf(string,"postfix_expression <- primary_expression ");
@@ -2084,7 +2064,7 @@ yyreduce:
   case 10:
 
 /* Line 1464 of yacc.c  */
-#line 214 "gramatica.y"
+#line 215 "gramatica.y"
     {
 											inicialitzarInfo();
 											ambit_actual=sym_get_scope();
@@ -2100,6 +2080,19 @@ yyreduce:
 													missatgeError(string,(yyvsp[(1) - (4)].ident).rows, (yyvsp[(1) - (4)].ident).columns);
 													YYERROR;
 												}else if(info.sizeList != UNDEF){
+													
+													/*-----------------C3A------------------*/
+													cast = nouTemp();
+													sprintf(op,"%c",'*');
+													filAux = inicialitzarFil(filAux);
+													sprintf(filAux.info, "%s %s %d %s %s", cast, ":=", obtenirMida(info.tipus), obtainOp(op, info.tipus), (yyvsp[(3) - (4)].ident).lexemac3a) ;
+													localC3A = emet(filAux, localC3A);
+													
+													(yyval.ident).lexemac3a = nouTemp();
+													filAux = inicialitzarFil(filAux);
+													sprintf(filAux.info, "%s %s %s[%s]", (yyval.ident).lexemac3a, ":=", (yyvsp[(1) - (4)].ident).lexemac3a, cast);
+													localC3A = emet(filAux, localC3A);
+													
 													sprintf(string,"(TS) Trobada la taula %s a la TS.", (yyvsp[(1) - (4)].ident).lexema);
 													missatgeTS(string,(yyvsp[(1) - (4)].ident).rows, (yyvsp[(1) - (4)].ident).columns);
 													(yyval.ident).tipus = info.tipus;
@@ -2121,7 +2114,7 @@ yyreduce:
   case 11:
 
 /* Line 1464 of yacc.c  */
-#line 245 "gramatica.y"
+#line 259 "gramatica.y"
     {
 							inicialitzarInfo();
 							ambit_actual = sym_get_scope();
@@ -2145,7 +2138,7 @@ yyreduce:
   case 12:
 
 /* Line 1464 of yacc.c  */
-#line 262 "gramatica.y"
+#line 276 "gramatica.y"
     {
 									inicialitzarInfo();
 									ambit_actual = sym_get_scope();
@@ -2167,7 +2160,7 @@ yyreduce:
   case 13:
 
 /* Line 1464 of yacc.c  */
-#line 278 "gramatica.y"
+#line 292 "gramatica.y"
     {
 								inicialitzarInfo();
 								ambit_actual = sym_get_scope();
@@ -2191,7 +2184,7 @@ yyreduce:
   case 14:
 
 /* Line 1464 of yacc.c  */
-#line 295 "gramatica.y"
+#line 309 "gramatica.y"
     {
 															inicialitzarInfo();
 															ambit_actual = sym_get_scope();
@@ -2214,7 +2207,7 @@ yyreduce:
   case 15:
 
 /* Line 1464 of yacc.c  */
-#line 312 "gramatica.y"
+#line 326 "gramatica.y"
     {sprintf(string,"postfix_expression <- postfix_expression '.' IDENTIFIER ");
 											string_output(string, (yyvsp[(1) - (3)].ident).rows, (yyvsp[(1) - (3)].ident).columns);;}
     break;
@@ -2222,7 +2215,7 @@ yyreduce:
   case 16:
 
 /* Line 1464 of yacc.c  */
-#line 314 "gramatica.y"
+#line 328 "gramatica.y"
     {sprintf(string,"postfix_expression <- postfix_expression INC_OP  ");
 											string_output(string, (yyvsp[(1) - (2)].ident).rows, (yyvsp[(1) - (2)].ident).columns);;}
     break;
@@ -2230,7 +2223,7 @@ yyreduce:
   case 17:
 
 /* Line 1464 of yacc.c  */
-#line 316 "gramatica.y"
+#line 330 "gramatica.y"
     {sprintf(string,"postfix_expression <- postfix_expression DEC_OP ");
 											string_output(string, (yyvsp[(1) - (2)].ident).rows, (yyvsp[(1) - (2)].ident).columns);;}
     break;
@@ -2238,7 +2231,7 @@ yyreduce:
   case 18:
 
 /* Line 1464 of yacc.c  */
-#line 320 "gramatica.y"
+#line 334 "gramatica.y"
     {
 													if(info.parametres[numParam].type != (yyvsp[(1) - (1)].ident).tipus){
 														sprintf(string,"ERROR. El tipus del parametre %d no coincideix amb la declaracio.", numParam + 1);
@@ -2256,7 +2249,7 @@ yyreduce:
   case 19:
 
 /* Line 1464 of yacc.c  */
-#line 332 "gramatica.y"
+#line 346 "gramatica.y"
     {
 															if(info.parametres[numParam].type != (yyvsp[(3) - (3)].ident).tipus){
 																sprintf(string,"ERROR. El tipus del parametre %d no coincideix amb la declaracio.", numParam + 1);
@@ -2273,7 +2266,7 @@ yyreduce:
   case 20:
 
 /* Line 1464 of yacc.c  */
-#line 345 "gramatica.y"
+#line 359 "gramatica.y"
     {
 										(yyval.ident) = (yyvsp[(1) - (1)].ident);
 										sprintf(string,"unary_expression <- postfix_expression ");
@@ -2283,7 +2276,7 @@ yyreduce:
   case 21:
 
 /* Line 1464 of yacc.c  */
-#line 349 "gramatica.y"
+#line 363 "gramatica.y"
     {sprintf(string,"unary_expression <- INC_OP unary_expression ");
 										string_output(string, (yyvsp[(1) - (2)].ident).rows, (yyvsp[(1) - (2)].ident).columns);;}
     break;
@@ -2291,7 +2284,7 @@ yyreduce:
   case 22:
 
 /* Line 1464 of yacc.c  */
-#line 351 "gramatica.y"
+#line 365 "gramatica.y"
     {sprintf(string,"unary_expression <- DEC_OP unary_expression ");
 										string_output(string, (yyvsp[(1) - (2)].ident).rows, (yyvsp[(1) - (2)].ident).columns);;}
     break;
@@ -2299,7 +2292,7 @@ yyreduce:
   case 23:
 
 /* Line 1464 of yacc.c  */
-#line 353 "gramatica.y"
+#line 367 "gramatica.y"
     {
 										if ((yyvsp[(2) - (2)].ident).tipus != ID_CHAR){
 											/*-----------------C3A------------------*/
@@ -2315,7 +2308,7 @@ yyreduce:
   case 24:
 
 /* Line 1464 of yacc.c  */
-#line 363 "gramatica.y"
+#line 377 "gramatica.y"
     {sprintf(string,"unary_expression <- SIZEOF unary_expression ");
 										string_output(string, (yyvsp[(1) - (2)].ident).rows, (yyvsp[(1) - (2)].ident).columns);;}
     break;
@@ -2323,7 +2316,7 @@ yyreduce:
   case 25:
 
 /* Line 1464 of yacc.c  */
-#line 365 "gramatica.y"
+#line 379 "gramatica.y"
     {sprintf(string,"unary_expression <- SIZEOF '(' type_name ')' ");
 										string_output(string, (yyvsp[(1) - (4)].ident).rows, (yyvsp[(1) - (4)].ident).columns);;}
     break;
@@ -2331,7 +2324,7 @@ yyreduce:
   case 26:
 
 /* Line 1464 of yacc.c  */
-#line 369 "gramatica.y"
+#line 383 "gramatica.y"
     {sprintf(string,"unary_operator <- '+' ");
 						string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -2339,7 +2332,7 @@ yyreduce:
   case 27:
 
 /* Line 1464 of yacc.c  */
-#line 371 "gramatica.y"
+#line 385 "gramatica.y"
     {sprintf(string,"unary_operator <- '-' ");
 						string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -2347,7 +2340,7 @@ yyreduce:
   case 28:
 
 /* Line 1464 of yacc.c  */
-#line 373 "gramatica.y"
+#line 387 "gramatica.y"
     {sprintf(string,"unary_operator <- '!' ");
 						string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -2355,7 +2348,7 @@ yyreduce:
   case 29:
 
 /* Line 1464 of yacc.c  */
-#line 377 "gramatica.y"
+#line 391 "gramatica.y"
     {
 										(yyval.ident) = (yyvsp[(1) - (1)].ident);
 										sprintf(string,"cast_expression <- unary_expression");
@@ -2365,7 +2358,7 @@ yyreduce:
   case 30:
 
 /* Line 1464 of yacc.c  */
-#line 381 "gramatica.y"
+#line 395 "gramatica.y"
     {
 										if(((yyvsp[(2) - (4)].ident).tipus != UNDEF)&&((yyvsp[(4) - (4)].ident).tipus != UNDEF)) {
 											
@@ -2423,7 +2416,7 @@ yyreduce:
   case 31:
 
 /* Line 1464 of yacc.c  */
-#line 435 "gramatica.y"
+#line 449 "gramatica.y"
     {
 											(yyval.ident) = (yyvsp[(1) - (1)].ident);
 											sprintf(string,"multiplicative_expression <- cast_expression");
@@ -2433,7 +2426,7 @@ yyreduce:
   case 32:
 
 /* Line 1464 of yacc.c  */
-#line 439 "gramatica.y"
+#line 453 "gramatica.y"
     {
 													if(((yyvsp[(1) - (3)].ident).tipus != UNDEF)&&((yyvsp[(3) - (3)].ident).tipus != UNDEF)) {
 														
@@ -2508,7 +2501,7 @@ yyreduce:
   case 33:
 
 /* Line 1464 of yacc.c  */
-#line 508 "gramatica.y"
+#line 522 "gramatica.y"
     {
 													if(((yyvsp[(1) - (3)].ident).tipus != UNDEF)&&((yyvsp[(3) - (3)].ident).tipus != UNDEF)) {
 														
@@ -2581,7 +2574,7 @@ yyreduce:
   case 34:
 
 /* Line 1464 of yacc.c  */
-#line 575 "gramatica.y"
+#line 589 "gramatica.y"
     {
 													if(((yyvsp[(1) - (3)].ident).tipus != UNDEF)&&((yyvsp[(3) - (3)].ident).tipus != UNDEF)) {
 														
@@ -2654,7 +2647,7 @@ yyreduce:
   case 35:
 
 /* Line 1464 of yacc.c  */
-#line 644 "gramatica.y"
+#line 658 "gramatica.y"
     {
 														(yyval.ident) = (yyvsp[(1) - (1)].ident);
 														sprintf(string,"additive_expression <- multiplicative_expression ");
@@ -2664,7 +2657,7 @@ yyreduce:
   case 36:
 
 /* Line 1464 of yacc.c  */
-#line 648 "gramatica.y"
+#line 662 "gramatica.y"
     {
 														if(((yyvsp[(1) - (3)].ident).tipus != UNDEF)&&((yyvsp[(3) - (3)].ident).tipus != UNDEF)) {
 															
@@ -2737,7 +2730,7 @@ yyreduce:
   case 37:
 
 /* Line 1464 of yacc.c  */
-#line 715 "gramatica.y"
+#line 729 "gramatica.y"
     {
 														if(((yyvsp[(1) - (3)].ident).tipus != UNDEF)&&((yyvsp[(3) - (3)].ident).tipus != UNDEF)) {
 															
@@ -2809,7 +2802,7 @@ yyreduce:
   case 38:
 
 /* Line 1464 of yacc.c  */
-#line 783 "gramatica.y"
+#line 797 "gramatica.y"
     {sprintf(string,"relational_expression <- additive_expression ");
 														string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -2817,7 +2810,7 @@ yyreduce:
   case 39:
 
 /* Line 1464 of yacc.c  */
-#line 785 "gramatica.y"
+#line 799 "gramatica.y"
     {
 														if(((yyvsp[(1) - (3)].ident).tipus != UNDEF)&&((yyvsp[(3) - (3)].ident).tipus != UNDEF)) {
 															if(((yyvsp[(1) - (3)].ident).sizeList != UNDEF)||((yyvsp[(3) - (3)].ident).sizeList != UNDEF)){
@@ -2842,7 +2835,7 @@ yyreduce:
   case 40:
 
 /* Line 1464 of yacc.c  */
-#line 804 "gramatica.y"
+#line 818 "gramatica.y"
     {
 														if(((yyvsp[(1) - (3)].ident).tipus != UNDEF)&&((yyvsp[(3) - (3)].ident).tipus != UNDEF)) {
 															if(((yyvsp[(1) - (3)].ident).sizeList != UNDEF)||((yyvsp[(3) - (3)].ident).sizeList != UNDEF)){
@@ -2867,7 +2860,7 @@ yyreduce:
   case 41:
 
 /* Line 1464 of yacc.c  */
-#line 823 "gramatica.y"
+#line 837 "gramatica.y"
     {
 														if(((yyvsp[(1) - (3)].ident).tipus != UNDEF)&&((yyvsp[(3) - (3)].ident).tipus != UNDEF)) {
 															if(((yyvsp[(1) - (3)].ident).sizeList != UNDEF)||((yyvsp[(3) - (3)].ident).sizeList != UNDEF)){
@@ -2891,7 +2884,7 @@ yyreduce:
   case 42:
 
 /* Line 1464 of yacc.c  */
-#line 841 "gramatica.y"
+#line 855 "gramatica.y"
     {
 														if(((yyvsp[(1) - (3)].ident).tipus != UNDEF)&&((yyvsp[(3) - (3)].ident).tipus != UNDEF)) {
 															if(((yyvsp[(1) - (3)].ident).sizeList != UNDEF)||((yyvsp[(3) - (3)].ident).sizeList != UNDEF)){
@@ -2915,7 +2908,7 @@ yyreduce:
   case 43:
 
 /* Line 1464 of yacc.c  */
-#line 861 "gramatica.y"
+#line 875 "gramatica.y"
     {sprintf(string,"equality_expression <- relational_expression");
 														string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -2923,7 +2916,7 @@ yyreduce:
   case 44:
 
 /* Line 1464 of yacc.c  */
-#line 863 "gramatica.y"
+#line 877 "gramatica.y"
     {
 														if(((yyvsp[(1) - (3)].ident).tipus != UNDEF)&&((yyvsp[(3) - (3)].ident).tipus != UNDEF)) {
 															if(((yyvsp[(1) - (3)].ident).sizeList != UNDEF)||((yyvsp[(3) - (3)].ident).sizeList != UNDEF)){
@@ -2947,7 +2940,7 @@ yyreduce:
   case 45:
 
 /* Line 1464 of yacc.c  */
-#line 881 "gramatica.y"
+#line 895 "gramatica.y"
     {
 														if(((yyvsp[(1) - (3)].ident).tipus != UNDEF)&&((yyvsp[(3) - (3)].ident).tipus != UNDEF)) {
 															if(((yyvsp[(1) - (3)].ident).sizeList != UNDEF)||((yyvsp[(3) - (3)].ident).sizeList != UNDEF)){
@@ -2971,7 +2964,7 @@ yyreduce:
   case 46:
 
 /* Line 1464 of yacc.c  */
-#line 901 "gramatica.y"
+#line 915 "gramatica.y"
     {sprintf(string,"logical_AND_expression <- equality_expression ");
 														string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -2979,7 +2972,7 @@ yyreduce:
   case 47:
 
 /* Line 1464 of yacc.c  */
-#line 903 "gramatica.y"
+#line 917 "gramatica.y"
     {
 														if(((yyvsp[(1) - (3)].ident).tipus != UNDEF)&&((yyvsp[(3) - (3)].ident).tipus != UNDEF)) {
 															if(((yyvsp[(1) - (3)].ident).sizeList != UNDEF)||((yyvsp[(3) - (3)].ident).sizeList != UNDEF)){
@@ -3003,7 +2996,7 @@ yyreduce:
   case 48:
 
 /* Line 1464 of yacc.c  */
-#line 923 "gramatica.y"
+#line 937 "gramatica.y"
     {sprintf(string,"logical_OR_expression <- logical_AND_expression");
 															string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -3011,7 +3004,7 @@ yyreduce:
   case 49:
 
 /* Line 1464 of yacc.c  */
-#line 925 "gramatica.y"
+#line 939 "gramatica.y"
     {
 															if(((yyvsp[(1) - (3)].ident).tipus != UNDEF)&&((yyvsp[(3) - (3)].ident).tipus != UNDEF)) {
 																if(((yyvsp[(1) - (3)].ident).sizeList != UNDEF)||((yyvsp[(3) - (3)].ident).sizeList != UNDEF)){
@@ -3035,7 +3028,7 @@ yyreduce:
   case 50:
 
 /* Line 1464 of yacc.c  */
-#line 945 "gramatica.y"
+#line 959 "gramatica.y"
     {
 															(yyval.ident) = (yyvsp[(1) - (1)].ident);
 															sprintf(string,"conditional_expression <- logical_OR_expression ");
@@ -3045,7 +3038,7 @@ yyreduce:
   case 51:
 
 /* Line 1464 of yacc.c  */
-#line 949 "gramatica.y"
+#line 963 "gramatica.y"
     {sprintf(string,"conditional_expression <- logical_OR_expression '?' expression ':' conditional_expression ");
 																		string_output(string, (yyvsp[(1) - (5)].ident).rows, (yyvsp[(1) - (5)].ident).columns);;}
     break;
@@ -3053,7 +3046,7 @@ yyreduce:
   case 52:
 
 /* Line 1464 of yacc.c  */
-#line 953 "gramatica.y"
+#line 967 "gramatica.y"
     {
 												(yyval.ident) = (yyvsp[(1) - (1)].ident);
 												sprintf(string,"constant_expression <- conditional_expression ");
@@ -3063,7 +3056,7 @@ yyreduce:
   case 53:
 
 /* Line 1464 of yacc.c  */
-#line 959 "gramatica.y"
+#line 973 "gramatica.y"
     {
 														(yyval.ident) = (yyvsp[(1) - (1)].ident);
 														sprintf(string,"assignment_expression <- conditional_expression ");
@@ -3073,7 +3066,7 @@ yyreduce:
   case 54:
 
 /* Line 1464 of yacc.c  */
-#line 963 "gramatica.y"
+#line 977 "gramatica.y"
     {
 																if(((yyvsp[(1) - (3)].ident).tipus != UNDEF)&&((yyvsp[(3) - (3)].ident).tipus != UNDEF)) {
 																	int comprovacio = 0;
@@ -3115,12 +3108,11 @@ yyreduce:
 																			/*-----------------C3A------------------*/
 																			cast = nouTemp();
 																			filAux = inicialitzarFil(filAux);
-																			sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast((yyvsp[(1) - (3)].ident).tipus, (yyvsp[(3) - (3)].ident).tipus, COMPTIPUS_DIF_RED_SEGON), (yyvsp[(1) - (3)].ident).lexemac3a);
+																			sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast((yyvsp[(3) - (3)].ident).tipus, (yyvsp[(1) - (3)].ident).tipus, COMPTIPUS_DIF_RED_SEGON), (yyvsp[(3) - (3)].ident).lexemac3a);
 																			localC3A = emet(filAux, localC3A);
 																			
-																			(yyval.ident).lexemac3a = nouTemp();
 																			filAux = inicialitzarFil(filAux);
-																			sprintf(filAux.info, "%s %s %s", (yyval.ident).lexemac3a, ":=", cast);
+																			sprintf(filAux.info, "%s %s %s", (yyvsp[(1) - (3)].ident).lexemac3a, ":=", cast);
 																			localC3A = emet(filAux, localC3A);
 																			
 																			sprintf(string,"Comprovacio de tipus - Perdua de presicio en l'assignacio (cast) al tipus %d.", (yyvsp[(1) - (3)].ident).tipus);
@@ -3146,7 +3138,7 @@ yyreduce:
   case 55:
 
 /* Line 1464 of yacc.c  */
-#line 1032 "gramatica.y"
+#line 1045 "gramatica.y"
     {sprintf(string,"assignment_operator <- '=' ");
 							string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -3154,7 +3146,7 @@ yyreduce:
   case 56:
 
 /* Line 1464 of yacc.c  */
-#line 1034 "gramatica.y"
+#line 1047 "gramatica.y"
     {sprintf(string,"assignment_operator <- MUL_ASSIG %s", (yyvsp[(1) - (1)].ident).lexema);
 					string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -3162,7 +3154,7 @@ yyreduce:
   case 57:
 
 /* Line 1464 of yacc.c  */
-#line 1036 "gramatica.y"
+#line 1049 "gramatica.y"
     {sprintf(string,"assignment_operator <- DIV_ASSIG %s", (yyvsp[(1) - (1)].ident).lexema);
 					string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -3170,7 +3162,7 @@ yyreduce:
   case 58:
 
 /* Line 1464 of yacc.c  */
-#line 1038 "gramatica.y"
+#line 1051 "gramatica.y"
     {sprintf(string,"assignment_operator <- MOD_ASSIG %s", (yyvsp[(1) - (1)].ident).lexema);
 					string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -3178,7 +3170,7 @@ yyreduce:
   case 59:
 
 /* Line 1464 of yacc.c  */
-#line 1040 "gramatica.y"
+#line 1053 "gramatica.y"
     {sprintf(string,"assignment_operator <- ADD_ASSIG %s", (yyvsp[(1) - (1)].ident).lexema);
 					string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -3186,7 +3178,7 @@ yyreduce:
   case 60:
 
 /* Line 1464 of yacc.c  */
-#line 1042 "gramatica.y"
+#line 1055 "gramatica.y"
     {sprintf(string,"assignment_operator <- SUB_ASSIG %s", (yyvsp[(1) - (1)].ident).lexema);
 					string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -3194,7 +3186,7 @@ yyreduce:
   case 61:
 
 /* Line 1464 of yacc.c  */
-#line 1046 "gramatica.y"
+#line 1059 "gramatica.y"
     {sprintf(string,"expression <- assignment_expression");
 										string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -3202,7 +3194,7 @@ yyreduce:
   case 62:
 
 /* Line 1464 of yacc.c  */
-#line 1048 "gramatica.y"
+#line 1061 "gramatica.y"
     {sprintf(string,"expression <- expression ',' assignment_expression");
 											string_output(string, (yyvsp[(1) - (3)].ident).rows, (yyvsp[(1) - (3)].ident).columns);;}
     break;
@@ -3210,7 +3202,7 @@ yyreduce:
   case 63:
 
 /* Line 1464 of yacc.c  */
-#line 1052 "gramatica.y"
+#line 1065 "gramatica.y"
     {sprintf(string,"declaration <- declaration_specifiers ; ");
 											string_output(string, (yyvsp[(1) - (2)].ident).rows, (yyvsp[(1) - (2)].ident).columns);;}
     break;
@@ -3218,7 +3210,7 @@ yyreduce:
   case 64:
 
 /* Line 1464 of yacc.c  */
-#line 1054 "gramatica.y"
+#line 1067 "gramatica.y"
     {
 														if (isFunction == 1){
 															inicialitzarInfo();
@@ -3243,7 +3235,7 @@ yyreduce:
   case 65:
 
 /* Line 1464 of yacc.c  */
-#line 1073 "gramatica.y"
+#line 1086 "gramatica.y"
     {
 														if(isStruct == 0){
 															inicialitzarInfo();
@@ -3286,7 +3278,7 @@ yyreduce:
   case 66:
 
 /* Line 1464 of yacc.c  */
-#line 1110 "gramatica.y"
+#line 1123 "gramatica.y"
     {	sprintf(string,"ERROR. TYPEDEF mal declarat.");
 										missatgeError(string,(yyvsp[(1) - (4)].ident).rows, (yyvsp[(1) - (4)].ident).columns);
 										yyerrok;;}
@@ -3295,7 +3287,7 @@ yyreduce:
   case 67:
 
 /* Line 1464 of yacc.c  */
-#line 1114 "gramatica.y"
+#line 1127 "gramatica.y"
     {	sprintf(string,"ERROR. TYPEDEF mal declarat.");
 													missatgeError(string,(yyvsp[(1) - (4)].ident).rows, (yyvsp[(1) - (4)].ident).columns);
 													yyerrok;;}
@@ -3304,14 +3296,14 @@ yyreduce:
   case 68:
 
 /* Line 1464 of yacc.c  */
-#line 1118 "gramatica.y"
+#line 1131 "gramatica.y"
     {yyerrok;;}
     break;
 
   case 69:
 
 /* Line 1464 of yacc.c  */
-#line 1121 "gramatica.y"
+#line 1134 "gramatica.y"
     {
 											(yyval.ident)=(yyvsp[(1) - (1)].ident);
 											sprintf(string,"declaration_specifiers <- type_specifier ");
@@ -3321,7 +3313,7 @@ yyreduce:
   case 70:
 
 /* Line 1464 of yacc.c  */
-#line 1127 "gramatica.y"
+#line 1140 "gramatica.y"
     {sprintf(string,"init_declarator_list <- init_declarator ");
 												string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -3329,7 +3321,7 @@ yyreduce:
   case 71:
 
 /* Line 1464 of yacc.c  */
-#line 1129 "gramatica.y"
+#line 1142 "gramatica.y"
     {sprintf(string,"init_declarator_list <- init_declarator_list ',' init_declarator ");
 												string_output(string, (yyvsp[(1) - (3)].ident).rows, (yyvsp[(1) - (3)].ident).columns);;}
     break;
@@ -3337,7 +3329,7 @@ yyreduce:
   case 72:
 
 /* Line 1464 of yacc.c  */
-#line 1133 "gramatica.y"
+#line 1146 "gramatica.y"
     {
 									inicialitzarInfo();
 									ambit_actual=sym_get_scope();
@@ -3412,11 +3404,7 @@ yyreduce:
   case 73:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1202 "gramatica.y"
-=======
-#line 962 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1215 "gramatica.y"
     {
 									inicialitzarInfo();
 									ambit_actual=sym_get_scope();
@@ -3479,11 +3467,7 @@ yyreduce:
   case 74:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1261 "gramatica.y"
-=======
-#line 1021 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1274 "gramatica.y"
     {
 						tipus_declaracio = ID_VOID;
 						(yyval.ident).tipus = ID_VOID;
@@ -3494,11 +3478,7 @@ yyreduce:
   case 75:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1266 "gramatica.y"
-=======
-#line 1026 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1279 "gramatica.y"
     {
 						tipus_declaracio = ID_CHAR;
 						(yyval.ident).tipus = ID_CHAR;
@@ -3509,11 +3489,7 @@ yyreduce:
   case 76:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1271 "gramatica.y"
-=======
-#line 1031 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1284 "gramatica.y"
     {
 						tipus_declaracio = ID_SHORT;
 						(yyval.ident).tipus = ID_SHORT;
@@ -3524,11 +3500,7 @@ yyreduce:
   case 77:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1276 "gramatica.y"
-=======
-#line 1036 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1289 "gramatica.y"
     {
 						
 						tipus_declaracio = ID_INT;
@@ -3540,11 +3512,7 @@ yyreduce:
   case 78:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1282 "gramatica.y"
-=======
-#line 1042 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1295 "gramatica.y"
     {
 						tipus_declaracio = ID_LONG;
 						(yyval.ident).tipus = ID_LONG;
@@ -3555,11 +3523,7 @@ yyreduce:
   case 79:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1287 "gramatica.y"
-=======
-#line 1047 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1300 "gramatica.y"
     {
 						tipus_declaracio = ID_FLOAT;
 						(yyval.ident).tipus = ID_FLOAT;
@@ -3570,11 +3534,7 @@ yyreduce:
   case 80:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1292 "gramatica.y"
-=======
-#line 1052 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1305 "gramatica.y"
     {
 						tipus_declaracio = ID_DOUBLE;
 						(yyval.ident).tipus = ID_DOUBLE;
@@ -3585,11 +3545,7 @@ yyreduce:
   case 81:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1297 "gramatica.y"
-=======
-#line 1057 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1310 "gramatica.y"
     {
 								
 								sprintf(string,"type_specifier <- struct_or_union_specifier");
@@ -3599,11 +3555,7 @@ yyreduce:
   case 82:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1301 "gramatica.y"
-=======
-#line 1061 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1314 "gramatica.y"
     {
 						
 						sprintf(string,"type_specifier <- typedef_name ");
@@ -3613,11 +3565,7 @@ yyreduce:
   case 83:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1307 "gramatica.y"
-=======
-#line 1067 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1320 "gramatica.y"
     {
 									inicialitzarInfo();
 									
@@ -3649,11 +3597,7 @@ yyreduce:
   case 84:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1335 "gramatica.y"
-=======
-#line 1095 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1348 "gramatica.y"
     {
 																						sprintf(string,"struct_or_union_specifier <- struct_or_union IDENTIFIER '{' struct_declaration_list '}'");
 																						string_output(string, (yyvsp[(1) - (5)].ident).rows, (yyvsp[(1) - (5)].ident).columns);;}
@@ -3662,11 +3606,7 @@ yyreduce:
   case 85:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1338 "gramatica.y"
-=======
-#line 1098 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1351 "gramatica.y"
     {sprintf(string,"struct_or_union_specifier <- struct_or_union '{' struct_declaration_list '}' ");
 																						string_output(string, (yyvsp[(1) - (4)].ident).rows, (yyvsp[(1) - (4)].ident).columns);;}
     break;
@@ -3674,11 +3614,7 @@ yyreduce:
   case 86:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1342 "gramatica.y"
-=======
-#line 1102 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1355 "gramatica.y"
     {
 							isStruct = 1;
 							sprintf(string,"struct_or_union <- STRUCT  %s", (yyvsp[(1) - (1)].ident).lexema);
@@ -3688,11 +3624,7 @@ yyreduce:
   case 87:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1346 "gramatica.y"
-=======
-#line 1106 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1359 "gramatica.y"
     {sprintf(string,"struct_or_union <- UNION  %s", (yyvsp[(1) - (1)].ident).lexema);
 							string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -3700,11 +3632,7 @@ yyreduce:
   case 88:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1350 "gramatica.y"
-=======
-#line 1110 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1363 "gramatica.y"
     {sprintf(string,"struct_declaration_list <- struct_declaration ");
 													string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -3712,11 +3640,7 @@ yyreduce:
   case 89:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1352 "gramatica.y"
-=======
-#line 1112 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1365 "gramatica.y"
     {sprintf(string,"struct_declaration_list <- struct_declaration_list struct_declaration ");
 													string_output(string, (yyvsp[(1) - (2)].ident).rows, (yyvsp[(1) - (2)].ident).columns);;}
     break;
@@ -3724,11 +3648,7 @@ yyreduce:
   case 90:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1356 "gramatica.y"
-=======
-#line 1116 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1369 "gramatica.y"
     {sprintf(string,"struct_declaration <- specifier_qualifier_list struct_declarator_list ';' ");
 																			string_output(string, (yyvsp[(1) - (3)].ident).rows, (yyvsp[(1) - (3)].ident).columns);;}
     break;
@@ -3736,11 +3656,7 @@ yyreduce:
   case 91:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1360 "gramatica.y"
-=======
-#line 1120 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1373 "gramatica.y"
     {sprintf(string,"struct_declarator_list <- struct_declarator");
 													string_output(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -3748,11 +3664,7 @@ yyreduce:
   case 92:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1362 "gramatica.y"
-=======
-#line 1122 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1375 "gramatica.y"
     {sprintf(string,"struct_declarator_list <- struct_declarator_list ',' struct_declarator");
 													string_output(string, (yyvsp[(1) - (3)].ident).rows, (yyvsp[(1) - (3)].ident).columns);;}
     break;
@@ -3760,11 +3672,7 @@ yyreduce:
   case 93:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1366 "gramatica.y"
-=======
-#line 1126 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1379 "gramatica.y"
     {sprintf(string,"struct_declarator <- declarator");
 									string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -3772,11 +3680,7 @@ yyreduce:
   case 94:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1370 "gramatica.y"
-=======
-#line 1130 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1383 "gramatica.y"
     {
 							
 							inicialitzarInfo();
@@ -3848,11 +3752,7 @@ yyreduce:
   case 95:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1436 "gramatica.y"
-=======
-#line 1196 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1449 "gramatica.y"
     {sprintf(string,"declarator <- '(' declarator ')'");
 							string_output(string,(yyvsp[(1) - (3)].ident).rows,(yyvsp[(1) - (3)].ident).columns);;}
     break;
@@ -3860,11 +3760,7 @@ yyreduce:
   case 96:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1438 "gramatica.y"
-=======
-#line 1198 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1451 "gramatica.y"
     {
 											inicialitzarInfo();
 											nparams_initializer_list = 0;
@@ -3907,11 +3803,7 @@ yyreduce:
   case 97:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1475 "gramatica.y"
-=======
-#line 1235 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1488 "gramatica.y"
     {
 						inicialitzarInfo();
 						ambit_actual=sym_get_scope();
@@ -3963,11 +3855,7 @@ yyreduce:
   case 98:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1506 "gramatica.y"
-=======
-#line 1280 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1533 "gramatica.y"
     {
 											/*isFunction = 0;*/
 											
@@ -3978,11 +3866,7 @@ yyreduce:
   case 99:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1511 "gramatica.y"
-=======
-#line 1285 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1538 "gramatica.y"
     {sprintf(string,"declarator <- declarator '(' identifier_list ')'");
 											string_output(string,(yyvsp[(1) - (4)].ident).rows,(yyvsp[(1) - (4)].ident).columns);;}
     break;
@@ -3990,11 +3874,7 @@ yyreduce:
   case 100:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1513 "gramatica.y"
-=======
-#line 1287 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1540 "gramatica.y"
     {
 											inicialitzarInfo();
 											ambit_actual=sym_get_scope();
@@ -4044,22 +3924,14 @@ yyreduce:
   case 101:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1543 "gramatica.y"
-=======
-#line 1331 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1584 "gramatica.y"
     {yyerrok;;}
     break;
 
   case 102:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1546 "gramatica.y"
-=======
-#line 1334 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1587 "gramatica.y"
     {sprintf(string,"parameter_list <- parameter_declaration");
 												string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -4067,11 +3939,7 @@ yyreduce:
   case 103:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1548 "gramatica.y"
-=======
-#line 1336 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1589 "gramatica.y"
     {sprintf(string,"parameter_list <- parameter_list ',' parameter_declaration");
 												string_output(string,(yyvsp[(1) - (3)].ident).rows,(yyvsp[(1) - (3)].ident).columns);;}
     break;
@@ -4079,11 +3947,7 @@ yyreduce:
   case 104:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1552 "gramatica.y"
-=======
-#line 1340 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1593 "gramatica.y"
     {
 											inicialitzarInfo();
 											/*Recuperem la funcio per guardar-hi el parametre*/
@@ -4163,11 +4027,7 @@ yyreduce:
   case 105:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1626 "gramatica.y"
-=======
-#line 1414 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1667 "gramatica.y"
     {sprintf(string,"parameter_declaration <- declaration_specifiers abstract_declarator");
 									string_output(string,(yyvsp[(1) - (2)].ident).rows,(yyvsp[(1) - (2)].ident).columns);;}
     break;
@@ -4175,11 +4035,7 @@ yyreduce:
   case 106:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1628 "gramatica.y"
-=======
-#line 1416 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1669 "gramatica.y"
     {
 							inicialitzarInfo();
 							/*Recuperem la funcio per guardar-hi el parametre*/
@@ -4239,11 +4095,7 @@ yyreduce:
   case 107:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1684 "gramatica.y"
-=======
-#line 1472 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1725 "gramatica.y"
     {		
 									sprintf(string,"identifier_list <- IDENTIFIER");
 									string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);;}
@@ -4252,11 +4104,7 @@ yyreduce:
   case 108:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1687 "gramatica.y"
-=======
-#line 1475 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1728 "gramatica.y"
     {
 									
 									sprintf(string,"identifier_list <- identifier_list ',' IDENTIFIER ");
@@ -4266,11 +4114,7 @@ yyreduce:
   case 109:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1693 "gramatica.y"
-=======
-#line 1481 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1734 "gramatica.y"
     {
 									(yyval.ident) = (yyvsp[(1) - (1)].ident);
 									sprintf(string,"type_name <- specifier_qualifier_list");
@@ -4280,11 +4124,7 @@ yyreduce:
   case 110:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1697 "gramatica.y"
-=======
-#line 1485 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1738 "gramatica.y"
     {sprintf(string,"type_name <- specifier_qualifier_list abstract_declarator");
 									string_output(string,(yyvsp[(1) - (2)].ident).rows,(yyvsp[(1) - (2)].ident).columns);;}
     break;
@@ -4292,11 +4132,7 @@ yyreduce:
   case 111:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1701 "gramatica.y"
-=======
-#line 1489 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1742 "gramatica.y"
     {sprintf(string,"specifier_qualifier_list <- type_specifier specifier_qualifier_list");
 									string_output(string,(yyvsp[(1) - (2)].ident).rows,(yyvsp[(1) - (2)].ident).columns);;}
     break;
@@ -4304,11 +4140,7 @@ yyreduce:
   case 112:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1703 "gramatica.y"
-=======
-#line 1491 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1744 "gramatica.y"
     {sprintf(string,"specifier_qualifier_list <- type_specifier");
 									string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -4316,11 +4148,7 @@ yyreduce:
   case 113:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1707 "gramatica.y"
-=======
-#line 1495 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1748 "gramatica.y"
     {sprintf(string,"abstract_declarator <- '(' abstract_declarator ')'");
 									string_output(string,(yyvsp[(1) - (3)].ident).rows,(yyvsp[(1) - (3)].ident).columns);;}
     break;
@@ -4328,11 +4156,7 @@ yyreduce:
   case 114:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1709 "gramatica.y"
-=======
-#line 1497 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1750 "gramatica.y"
     {sprintf(string,"abstract_declarator <- '[' INTEGER_CONSTANT ']'");
 									string_output(string,(yyvsp[(1) - (3)].ident).rows,(yyvsp[(1) - (3)].ident).columns);;}
     break;
@@ -4340,11 +4164,7 @@ yyreduce:
   case 115:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1711 "gramatica.y"
-=======
-#line 1499 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1752 "gramatica.y"
     {sprintf(string,"abstract_declarator <- abstract_declarator '[' INTEGER_CONSTANT ']'");
 									string_output(string,(yyvsp[(1) - (4)].ident).rows,(yyvsp[(1) - (4)].ident).columns);;}
     break;
@@ -4352,11 +4172,7 @@ yyreduce:
   case 116:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1713 "gramatica.y"
-=======
-#line 1501 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1754 "gramatica.y"
     {sprintf(string,"abstract_declarator <- '(' ')'");
 									string_output(string,(yyvsp[(1) - (2)].ident).rows,(yyvsp[(1) - (2)].ident).columns);;}
     break;
@@ -4364,11 +4180,7 @@ yyreduce:
   case 117:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1715 "gramatica.y"
-=======
-#line 1503 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1756 "gramatica.y"
     {sprintf(string,"abstract_declarator <- '(' parameter_list ')'");
 									string_output(string,(yyvsp[(1) - (3)].ident).rows,(yyvsp[(1) - (3)].ident).columns);;}
     break;
@@ -4376,11 +4188,7 @@ yyreduce:
   case 118:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1717 "gramatica.y"
-=======
-#line 1505 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1758 "gramatica.y"
     {sprintf(string,"abstract_declarator <- abstract_declarator '(' ')'");
 									string_output(string,(yyvsp[(1) - (3)].ident).rows,(yyvsp[(1) - (3)].ident).columns);;}
     break;
@@ -4388,11 +4196,7 @@ yyreduce:
   case 119:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1719 "gramatica.y"
-=======
-#line 1507 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1760 "gramatica.y"
     {sprintf(string,"abstract_declarator <- abstract_declarator '(' parameter_list ')'");
 									string_output(string,(yyvsp[(1) - (4)].ident).rows,(yyvsp[(1) - (4)].ident).columns);;}
     break;
@@ -4400,11 +4204,7 @@ yyreduce:
   case 120:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1723 "gramatica.y"
-=======
-#line 1511 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1764 "gramatica.y"
     {sprintf(string,"initializer <- assignment_expression");
 									string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -4412,11 +4212,7 @@ yyreduce:
   case 121:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1725 "gramatica.y"
-=======
-#line 1513 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1766 "gramatica.y"
     {sprintf(string,"initializer <- '{' initializer_list '}'");
 								string_output(string,(yyvsp[(1) - (3)].ident).rows,(yyvsp[(1) - (3)].ident).columns);;}
     break;
@@ -4424,11 +4220,7 @@ yyreduce:
   case 122:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1727 "gramatica.y"
-=======
-#line 1515 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1768 "gramatica.y"
     {sprintf(string,"initializer <- '{' initializer_list ',' '}'");
 									string_output(string,(yyvsp[(1) - (4)].ident).rows,(yyvsp[(1) - (4)].ident).columns);;}
     break;
@@ -4436,11 +4228,7 @@ yyreduce:
   case 123:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1731 "gramatica.y"
-=======
-#line 1519 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1772 "gramatica.y"
     {
 								if((yyvsp[(1) - (1)].ident).tipus == tipus_declaracio){
 									nparams_initializer_list ++;
@@ -4457,11 +4245,7 @@ yyreduce:
   case 124:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1742 "gramatica.y"
-=======
-#line 1530 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1783 "gramatica.y"
     {
 										if((yyvsp[(3) - (3)].ident).tipus == tipus_declaracio){
 											nparams_initializer_list ++;
@@ -4478,11 +4262,7 @@ yyreduce:
   case 125:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1755 "gramatica.y"
-=======
-#line 1543 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1796 "gramatica.y"
     {sprintf(string,"statement <- abeled_statement");
 								string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -4490,11 +4270,7 @@ yyreduce:
   case 126:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1757 "gramatica.y"
-=======
-#line 1545 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1798 "gramatica.y"
     {sprintf(string,"statement <- compound_statement");
 								string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -4502,11 +4278,7 @@ yyreduce:
   case 127:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1759 "gramatica.y"
-=======
-#line 1547 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1800 "gramatica.y"
     {sprintf(string,"statement <- expression_statement");
 								string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -4514,11 +4286,7 @@ yyreduce:
   case 128:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1761 "gramatica.y"
-=======
-#line 1549 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1802 "gramatica.y"
     {sprintf(string,"statement <- selection_statement");
 								string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -4526,11 +4294,7 @@ yyreduce:
   case 129:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1763 "gramatica.y"
-=======
-#line 1551 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1804 "gramatica.y"
     {sprintf(string,"statement <- iteration_statement");
 								string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -4538,11 +4302,7 @@ yyreduce:
   case 130:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1765 "gramatica.y"
-=======
-#line 1553 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1806 "gramatica.y"
     {sprintf(string,"statement <- jump_statement");
 								string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -4550,11 +4310,7 @@ yyreduce:
   case 131:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1769 "gramatica.y"
-=======
-#line 1557 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1810 "gramatica.y"
     {sprintf(string,"labeled_statement <- CASE constant_expression ':' statement");
 															string_output(string,(yyvsp[(1) - (4)].ident).rows,(yyvsp[(1) - (4)].ident).columns);;}
     break;
@@ -4562,11 +4318,7 @@ yyreduce:
   case 132:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1771 "gramatica.y"
-=======
-#line 1559 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1812 "gramatica.y"
     {sprintf(string,"labeled_statement <- DEFAULT ':' statement");
 								string_output(string,(yyvsp[(1) - (3)].ident).rows,(yyvsp[(1) - (3)].ident).columns);;}
     break;
@@ -4574,11 +4326,7 @@ yyreduce:
   case 133:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1775 "gramatica.y"
-=======
-#line 1563 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1816 "gramatica.y"
     { 
 							if(isReturn == 0){
 						  	/* buscar el nom de la funcio i mirar el tipus, si no es void return warning */
@@ -4600,11 +4348,7 @@ yyreduce:
   case 134:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1791 "gramatica.y"
-=======
-#line 1579 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1832 "gramatica.y"
     {sprintf(string,"compound_statement <- '{' '}' ");
 								string_output(string,(yyvsp[(1) - (3)].ident).rows,(yyvsp[(1) - (3)].ident).columns);;}
     break;
@@ -4612,11 +4356,7 @@ yyreduce:
   case 135:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1793 "gramatica.y"
-=======
-#line 1581 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1834 "gramatica.y"
     {
 								if(isReturn == 0){
 								  	/* buscar el nom de la funcio i mirar el tipus, si no es void return warning */
@@ -4638,11 +4378,7 @@ yyreduce:
   case 136:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1808 "gramatica.y"
-=======
-#line 1596 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1849 "gramatica.y"
     {sprintf(string,"compound_statement <- '{' declaration_list '}'");
 								string_output(string,(yyvsp[(1) - (4)].ident).rows,(yyvsp[(1) - (4)].ident).columns);;}
     break;
@@ -4650,11 +4386,7 @@ yyreduce:
   case 137:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1810 "gramatica.y"
-=======
-#line 1598 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1851 "gramatica.y"
     {
 							if(isReturn == 0){
 							  	/* buscar el nom de la funcio i mirar el tipus, si no es void return warning */
@@ -4676,11 +4408,7 @@ yyreduce:
   case 138:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1825 "gramatica.y"
-=======
-#line 1613 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1866 "gramatica.y"
     {sprintf(string,"compound_statement <- '{' statement_list '}' ");
 												string_output(string,(yyvsp[(1) - (4)].ident).rows,(yyvsp[(1) - (4)].ident).columns);;}
     break;
@@ -4688,11 +4416,7 @@ yyreduce:
   case 139:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1827 "gramatica.y"
-=======
-#line 1615 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1868 "gramatica.y"
     {  
 										  if(isReturn == 0){
 										  	/* buscar el nom de la funcio i mirar el tipus, si no es void return warning */
@@ -4714,11 +4438,7 @@ yyreduce:
   case 140:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1842 "gramatica.y"
-=======
-#line 1630 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1883 "gramatica.y"
     {sprintf(string,"compound_statement <- '{' declaration_list statement_list '}'");
 												string_output(string,(yyvsp[(1) - (5)].ident).rows,(yyvsp[(1) - (5)].ident).columns);;}
     break;
@@ -4726,11 +4446,7 @@ yyreduce:
   case 141:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1846 "gramatica.y"
-=======
-#line 1634 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1887 "gramatica.y"
     {sprintf(string,"statement_list <- statement ");
 								string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -4738,11 +4454,7 @@ yyreduce:
   case 142:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1848 "gramatica.y"
-=======
-#line 1636 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1889 "gramatica.y"
     {sprintf(string,"statement_list <- statement_list statement ");
 								string_output(string,(yyvsp[(1) - (2)].ident).rows,(yyvsp[(1) - (2)].ident).columns);;}
     break;
@@ -4750,11 +4462,7 @@ yyreduce:
   case 143:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1852 "gramatica.y"
-=======
-#line 1640 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1893 "gramatica.y"
     {sprintf(string,"expression_statement <- ';' ");
 								string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -4762,11 +4470,7 @@ yyreduce:
   case 144:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1854 "gramatica.y"
-=======
-#line 1642 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1895 "gramatica.y"
     {sprintf(string,"expression_statement <- expression ';' ");
 								string_output(string,(yyvsp[(1) - (2)].ident).rows,(yyvsp[(1) - (2)].ident).columns);;}
     break;
@@ -4774,11 +4478,7 @@ yyreduce:
   case 145:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1859 "gramatica.y"
-=======
-#line 1647 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1900 "gramatica.y"
     {sprintf(string,"selection_statement <- IF '(' expression ')' statement");
 														string_output(string,(yyvsp[(1) - (5)].ident).rows,(yyvsp[(1) - (5)].ident).columns);;}
     break;
@@ -4786,11 +4486,7 @@ yyreduce:
   case 146:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1861 "gramatica.y"
-=======
-#line 1649 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1902 "gramatica.y"
     {sprintf(string,"selection_statement <- IF '(' expression ')' statement ELSE statement");
 														string_output(string,(yyvsp[(1) - (7)].ident).rows,(yyvsp[(1) - (7)].ident).columns);;}
     break;
@@ -4798,11 +4494,7 @@ yyreduce:
   case 147:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1863 "gramatica.y"
-=======
-#line 1651 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1904 "gramatica.y"
     {sprintf(string,"selection_statement <- SWITCH '(' expression ')' statement");
 														string_output(string,(yyvsp[(1) - (5)].ident).rows,(yyvsp[(1) - (5)].ident).columns);;}
     break;
@@ -4810,11 +4502,7 @@ yyreduce:
   case 148:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1867 "gramatica.y"
-=======
-#line 1655 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1908 "gramatica.y"
     {sprintf(string,"iteration_statement <- WHILE '(' expression ')' statement");
 															string_output(string,(yyvsp[(1) - (5)].ident).rows,(yyvsp[(1) - (5)].ident).columns);;}
     break;
@@ -4822,11 +4510,7 @@ yyreduce:
   case 149:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1869 "gramatica.y"
-=======
-#line 1657 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1910 "gramatica.y"
     {sprintf(string,"iteration_statement <- DO statement WHILE '(' expression ')' ';'");
 															string_output(string,(yyvsp[(1) - (7)].ident).rows,(yyvsp[(1) - (7)].ident).columns);;}
     break;
@@ -4834,11 +4518,7 @@ yyreduce:
   case 150:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1871 "gramatica.y"
-=======
-#line 1659 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1912 "gramatica.y"
     {sprintf(string,"iteration_statement <-  FOR '(' expression ';' expression ';' expression ')' statement");
 																		string_output(string,(yyvsp[(1) - (9)].ident).rows,(yyvsp[(1) - (9)].ident).columns);;}
     break;
@@ -4846,11 +4526,7 @@ yyreduce:
   case 151:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1873 "gramatica.y"
-=======
-#line 1661 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1914 "gramatica.y"
     {sprintf(string,"iteration_statement <- FOR '(' ';' expression ';' expression ')' statement ");
 															string_output(string,(yyvsp[(1) - (8)].ident).rows,(yyvsp[(1) - (8)].ident).columns);;}
     break;
@@ -4858,11 +4534,7 @@ yyreduce:
   case 152:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1875 "gramatica.y"
-=======
-#line 1663 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1916 "gramatica.y"
     {sprintf(string,"iteration_statement <- FOR '(' ';' ';' expression ')' statement ");
 															string_output(string,(yyvsp[(1) - (7)].ident).rows,(yyvsp[(1) - (7)].ident).columns);;}
     break;
@@ -4870,11 +4542,7 @@ yyreduce:
   case 153:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1877 "gramatica.y"
-=======
-#line 1665 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1918 "gramatica.y"
     {sprintf(string,"iteration_statement <- FOR '(' ';' ';' ')' statement");
 															string_output(string,(yyvsp[(1) - (6)].ident).rows,(yyvsp[(1) - (6)].ident).columns);;}
     break;
@@ -4882,11 +4550,7 @@ yyreduce:
   case 154:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1879 "gramatica.y"
-=======
-#line 1667 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1920 "gramatica.y"
     {sprintf(string,"iteration_statement <- FOR '(' expression ';' ';' expression ')' statement ");
 															string_output(string,(yyvsp[(1) - (8)].ident).rows,(yyvsp[(1) - (8)].ident).columns);;}
     break;
@@ -4894,11 +4558,7 @@ yyreduce:
   case 155:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1881 "gramatica.y"
-=======
-#line 1669 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1922 "gramatica.y"
     {sprintf(string,"iteration_statement <- FOR '(' expression ';' ';' ')' statement ");
 															string_output(string,(yyvsp[(1) - (7)].ident).rows,(yyvsp[(1) - (7)].ident).columns);;}
     break;
@@ -4906,11 +4566,7 @@ yyreduce:
   case 156:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1883 "gramatica.y"
-=======
-#line 1671 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1924 "gramatica.y"
     {sprintf(string,"iteration_statement <- FOR '(' ';' expression ';' ')' statement ");
 															string_output(string,(yyvsp[(1) - (7)].ident).rows,(yyvsp[(1) - (7)].ident).columns);;}
     break;
@@ -4918,11 +4574,7 @@ yyreduce:
   case 157:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1885 "gramatica.y"
-=======
-#line 1673 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1926 "gramatica.y"
     {sprintf(string,"iteration_statement <- FOR '(' expression ';' expression ';' ')' statement ");
 															string_output(string,(yyvsp[(1) - (8)].ident).rows,(yyvsp[(1) - (8)].ident).columns);;}
     break;
@@ -4930,11 +4582,7 @@ yyreduce:
   case 158:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1889 "gramatica.y"
-=======
-#line 1677 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1930 "gramatica.y"
     {sprintf(string,"jump_statement <- CONTINUE ';'");
 								string_output(string,(yyvsp[(1) - (2)].ident).rows,(yyvsp[(1) - (2)].ident).columns);;}
     break;
@@ -4942,11 +4590,7 @@ yyreduce:
   case 159:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1891 "gramatica.y"
-=======
-#line 1679 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1932 "gramatica.y"
     {sprintf(string,"jump_statement <- BREAK ';'");
 				string_output(string,(yyvsp[(1) - (2)].ident).rows,(yyvsp[(1) - (2)].ident).columns);;}
     break;
@@ -4954,11 +4598,7 @@ yyreduce:
   case 160:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1893 "gramatica.y"
-=======
-#line 1681 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1934 "gramatica.y"
     {
 				/* buscar el nom de la funcio i mirar el tipus, si no es void return warning */
 				inicialitzarInfo();
@@ -4980,11 +4620,7 @@ yyreduce:
   case 161:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1909 "gramatica.y"
-=======
-#line 1697 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1950 "gramatica.y"
     {
 							/* buscar el nom de la funcio i mirar el tipus, si no es void return warning */
 							inicialitzarInfo();
@@ -5007,11 +4643,7 @@ yyreduce:
   case 162:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1928 "gramatica.y"
-=======
-#line 1716 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1969 "gramatica.y"
     {sprintf(string,"translation_unit <- external_declaration");
 										string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);
 										;}
@@ -5020,11 +4652,7 @@ yyreduce:
   case 163:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1931 "gramatica.y"
-=======
-#line 1719 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1972 "gramatica.y"
     {sprintf(string,"translation_unit <- translation_unit external_declaration");
 											string_output(string,(yyvsp[(1) - (2)].ident).rows,(yyvsp[(1) - (2)].ident).columns);
 											/*imprimirTaula(globalRA, "Taula global");*/;}
@@ -5033,22 +4661,14 @@ yyreduce:
   case 164:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1934 "gramatica.y"
-=======
-#line 1722 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1975 "gramatica.y"
     {yyerrok;;}
     break;
 
   case 165:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1937 "gramatica.y"
-=======
-#line 1725 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1978 "gramatica.y"
     {sprintf(string,"external_declaration <- function_definition");
 											string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -5056,11 +4676,7 @@ yyreduce:
   case 166:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1939 "gramatica.y"
-=======
-#line 1727 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1980 "gramatica.y"
     {sprintf(string,"external_declaration <- declaration");
 					string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);;}
     break;
@@ -5068,11 +4684,7 @@ yyreduce:
   case 167:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 1942 "gramatica.y"
-=======
-#line 1730 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 1983 "gramatica.y"
     {
 									error_sym = sym_get_scope();
 									
@@ -5089,6 +4701,12 @@ yyreduce:
 									if (error_sym!=SYMTAB_OK)
 										mostraError(error_sym,(const char *)&nom_ambit);
 									else {
+										
+										/*-----------------C3A------------------*/
+										filAux = inicialitzarFil(filAux);
+										sprintf(filAux.info, "%s %s ", "START", nom_funcio);
+										localC3A = emet(filAux, localC3A);
+										
 										sprintf(string, "Apilat el nou ambit per a la funcio %s amb codi %d",nom_ambit,ambit_actual);
 										missatgeTS(string, (yyvsp[(1) - (1)].ident).rows, (yyvsp[(1) - (1)].ident).columns);
 									}
@@ -5142,11 +4760,7 @@ yyreduce:
   case 168:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 2005 "gramatica.y"
-=======
-#line 1793 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 2052 "gramatica.y"
     {
 													ambit_actual = sym_get_scope();
 													error_sym = sym_pop_scope();
@@ -5186,11 +4800,7 @@ yyreduce:
   case 169:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 2050 "gramatica.y"
-=======
-#line 1823 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 2086 "gramatica.y"
     {sprintf(string,"function_definition <- declarator_specifier declarator declaration_list compound_statement");
 													string_output(string,(yyvsp[(1) - (4)].ident).rows,(yyvsp[(1) - (4)].ident).columns);;}
     break;
@@ -5198,11 +4808,7 @@ yyreduce:
   case 170:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 2052 "gramatica.y"
-=======
-#line 1825 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 2088 "gramatica.y"
     {
 											isFunction = 0;
 											error_sym = sym_get_scope();
@@ -5218,6 +4824,11 @@ yyreduce:
 											if (error_sym!=SYMTAB_OK)
 												mostraError(error_sym,(const char *)&nom_ambit);
 											else {
+												/*-----------------C3A------------------*/
+												filAux = inicialitzarFil(filAux);
+												sprintf(filAux.info, "%s %s ", "START", nom_funcio);
+												localC3A = emet(filAux, localC3A);
+												
 												sprintf(string, "Apilat el nou ambit per a la funcio %s amb codi %d",nom_ambit,ambit_actual);
 												missatgeTS(string, (yyvsp[(2) - (2)].ident).rows, (yyvsp[(2) - (2)].ident).columns);
 											}
@@ -5259,11 +4870,7 @@ yyreduce:
   case 171:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 2102 "gramatica.y"
-=======
-#line 1875 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 2143 "gramatica.y"
     {
 															
 															ambit_actual = sym_get_scope();
@@ -5282,14 +4889,10 @@ yyreduce:
 																
 																missatgeTS(string,(yyvsp[(2) - (4)].ident).rows, (yyvsp[(2) - (4)].ident).columns);
 																sprintf(string, "Funcio %s", nom_funcio);
-<<<<<<< HEAD
 																
 																/*-----------------C3A----------------*/
 																imprimirTaula(localRA, string, info.nParamsFuncio);
 																imprimirT(localC3A);
-=======
-																imprimirTaula(localRA, string);
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
 																																
 																localRA = esborrarTaula(localRA);
 																localC3A = esborrarT(localC3A);
@@ -5303,11 +4906,7 @@ yyreduce:
   case 172:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 2142 "gramatica.y"
-=======
-#line 1901 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 2173 "gramatica.y"
     {sprintf(string,"function_definition <- declarator declaration_list compound_statement");
 													string_output(string,(yyvsp[(1) - (3)].ident).rows,(yyvsp[(1) - (3)].ident).columns);;}
     break;
@@ -5315,33 +4914,21 @@ yyreduce:
   case 173:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 2144 "gramatica.y"
-=======
-#line 1903 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 2175 "gramatica.y"
     {yyerrok;;}
     break;
 
   case 174:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 2146 "gramatica.y"
-=======
-#line 1905 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 2177 "gramatica.y"
     {yyerrok;;}
     break;
 
   case 175:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 2149 "gramatica.y"
-=======
-#line 1908 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 2180 "gramatica.y"
     {
 								sprintf(string,"declaration_list <- declaration");
 								string_output(string,(yyvsp[(1) - (1)].ident).rows,(yyvsp[(1) - (1)].ident).columns);;}
@@ -5350,11 +4937,7 @@ yyreduce:
   case 176:
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 2152 "gramatica.y"
-=======
-#line 1911 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 2183 "gramatica.y"
     {
 									sprintf(string,"declaration_list <- declaration_list declaration");
 									string_output(string,(yyvsp[(1) - (2)].ident).rows,(yyvsp[(1) - (2)].ident).columns);;}
@@ -5363,11 +4946,7 @@ yyreduce:
 
 
 /* Line 1464 of yacc.c  */
-<<<<<<< HEAD
-#line 4919 "gramaticay.tab.c"
-=======
-#line 4684 "gramaticay.tab.c"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 4950 "gramaticay.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -5579,11 +5158,7 @@ yyreturn:
 
 
 /* Line 1684 of yacc.c  */
-<<<<<<< HEAD
-#line 2157 "gramatica.y"
-=======
-#line 1916 "gramatica.y"
->>>>>>> ec4e1724bf06327cdb404b1b9091bf4f36de36cf
+#line 2188 "gramatica.y"
 
 
 void string_output(char *string, int row, int column){
@@ -5624,6 +5199,7 @@ int init_analisi_sintactic(char* filename){
 	inicialitzarFit(filename);
 	
 	cast = (char *)malloc(20*sizeof(char));
+	op = (char *)malloc(5*sizeof(char));
 	
 	nom_programa = (char *)malloc(sizeof(filename));
 	strcpy(nom_programa, filename);

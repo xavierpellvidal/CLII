@@ -1,4 +1,5 @@
-$t1 := b MULF c
-$t2 := a ADDF $t1
-$t3 := I2F x
-$t4 := $t3
+START main 
+$t1 := 4 MULI 7
+$t2 := a[$t1]
+$t3 := I2F $t2
+x := $t3

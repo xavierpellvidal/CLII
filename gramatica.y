@@ -42,6 +42,7 @@ char *nom_funcio;
 char *punter;
 
 char *cast;
+char *op;
 
 taula globalRA, localRA;
 fila filaAux;
@@ -226,6 +227,19 @@ postfix_expression : primary_expression 	{
 													missatgeError(string,$1.rows, $1.columns);
 													YYERROR;
 												}else if(info.sizeList != UNDEF){
+													
+													/*-----------------C3A------------------*/
+													cast = nouTemp();
+													sprintf(op,"%c",'*');
+													filAux = inicialitzarFil(filAux);
+													sprintf(filAux.info, "%s %s %d %s %s", cast, ":=", obtenirMida(info.tipus), obtainOp(op, info.tipus), $3.lexemac3a) ;
+													localC3A = emet(filAux, localC3A);
+													
+													$$.lexemac3a = nouTemp();
+													filAux = inicialitzarFil(filAux);
+													sprintf(filAux.info, "%s %s %s[%s]", $$.lexemac3a, ":=", $1.lexemac3a, cast);
+													localC3A = emet(filAux, localC3A);
+													
 													sprintf(string,"(TS) Trobada la taula %s a la TS.", $1.lexema);
 													missatgeTS(string,$1.rows, $1.columns);
 													$$.tipus = info.tipus;
@@ -987,7 +1001,6 @@ assignment_expression : conditional_expression  		{
 																			sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
 																			localC3A = emet(filAux, localC3A);
 																			
-																			$$.lexemac3a = nouTemp();
 																			filAux = inicialitzarFil(filAux);
 																			sprintf(filAux.info, "%s %s %s", $1.lexemac3a, ":=", cast);
 																			localC3A = emet(filAux, localC3A);
@@ -1001,12 +1014,11 @@ assignment_expression : conditional_expression  		{
 																			/*-----------------C3A------------------*/
 																			cast = nouTemp();
 																			filAux = inicialitzarFil(filAux);
-																			sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
+																			sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($3.tipus, $1.tipus, COMPTIPUS_DIF_RED_SEGON), $3.lexemac3a);
 																			localC3A = emet(filAux, localC3A);
 																			
-																			$$.lexemac3a = nouTemp();
 																			filAux = inicialitzarFil(filAux);
-																			sprintf(filAux.info, "%s %s %s", $$.lexemac3a, ":=", cast);
+																			sprintf(filAux.info, "%s %s %s", $1.lexemac3a, ":=", cast);
 																			localC3A = emet(filAux, localC3A);
 																			
 																			sprintf(string,"Comprovacio de tipus - Perdua de presicio en l'assignacio (cast) al tipus %d.", $1.tipus);
@@ -1983,6 +1995,12 @@ function_definition : declarator {
 									if (error_sym!=SYMTAB_OK)
 										mostraError(error_sym,(const char *)&nom_ambit);
 									else {
+										
+										/*-----------------C3A------------------*/
+										filAux = inicialitzarFil(filAux);
+										sprintf(filAux.info, "%s %s ", "START", nom_funcio);
+										localC3A = emet(filAux, localC3A);
+										
 										sprintf(string, "Apilat el nou ambit per a la funcio %s amb codi %d",nom_ambit,ambit_actual);
 										missatgeTS(string, $1.rows, $1.columns);
 									}
@@ -2081,6 +2099,11 @@ function_definition : declarator {
 											if (error_sym!=SYMTAB_OK)
 												mostraError(error_sym,(const char *)&nom_ambit);
 											else {
+												/*-----------------C3A------------------*/
+												filAux = inicialitzarFil(filAux);
+												sprintf(filAux.info, "%s %s ", "START", nom_funcio);
+												localC3A = emet(filAux, localC3A);
+												
 												sprintf(string, "Apilat el nou ambit per a la funcio %s amb codi %d",nom_ambit,ambit_actual);
 												missatgeTS(string, $2.rows, $2.columns);
 											}
@@ -2201,6 +2224,7 @@ int init_analisi_sintactic(char* filename){
 	inicialitzarFit(filename);
 	
 	cast = (char *)malloc(20*sizeof(char));
+	op = (char *)malloc(5*sizeof(char));
 	
 	nom_programa = (char *)malloc(sizeof(filename));
 	strcpy(nom_programa, filename);
