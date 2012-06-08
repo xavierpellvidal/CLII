@@ -1,7 +1,14 @@
-main(int g){
-	int a[8];
-	float x; 
-	x = a[7];
+
+void prova(int a){
+
 }
+
+main(int g){
+	
+	prova(2);
+	
+}
+
+
 
 

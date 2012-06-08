@@ -1,5 +1,3 @@
+START prova 
 START main 
-$t1 := 4 MULI 7
-$t2 := a[$t1]
-$t3 := I2F $t2
-x := $t3
+
