@@ -169,7 +169,7 @@ primary_expression : IDENTIFIER {
 								$$.tipus = $2.tipus;
 								
 								/*-----------------C3A------------------*/
-								$$.lexemac3a = $2.lexema;
+								$$.lexemac3a = $2.lexemac3a;
 								
 								sprintf(string,"primary_expression <- (expression) ");
 								string_output(string, $<ident>1.rows, $<ident>1.columns);}
@@ -968,14 +968,47 @@ assignment_expression : conditional_expression  		{
 																	
 																	switch (comprovacio) {
 																		case COMPTIPUS_IGUALS:
+																			$$.tipus = $1.tipus;
+																			
+																			/*-----------------C3A------------------*/
+																			filAux = inicialitzarFil(filAux);
+																			sprintf(filAux.info, "%s %s %s", $1.lexemac3a, ":=", $3.lexemac3a);
+																			localC3A = emet(filAux, localC3A);
+																			
 																			sprintf(string,"Operacio correcta del mateix tipus.");
 																			missatgeTS(string,$1.rows, $1.columns);
 																		break;
 																		case COMPTIPUS_DIF_RED_PRIMER:
+																			$$.tipus = $1.tipus;
+																			
+																			/*-----------------C3A------------------*/
+																			cast = nouTemp();
+																			filAux = inicialitzarFil(filAux);
+																			sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
+																			localC3A = emet(filAux, localC3A);
+																			
+																			$$.lexemac3a = nouTemp();
+																			filAux = inicialitzarFil(filAux);
+																			sprintf(filAux.info, "%s %s %s", $1.lexemac3a, ":=", cast);
+																			localC3A = emet(filAux, localC3A);
+																			
 																			sprintf(string,"Comprovacio de tipus - (cast) al tipus %d ", $1.tipus);
 																			missatgeWarning(string,$1.rows, $1.columns);
 																		break;
 																		case COMPTIPUS_DIF_RED_SEGON:
+																			$$.tipus = $3.tipus;
+																			
+																			/*-----------------C3A------------------*/
+																			cast = nouTemp();
+																			filAux = inicialitzarFil(filAux);
+																			sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
+																			localC3A = emet(filAux, localC3A);
+																			
+																			$$.lexemac3a = nouTemp();
+																			filAux = inicialitzarFil(filAux);
+																			sprintf(filAux.info, "%s %s %s", $$.lexemac3a, ":=", cast);
+																			localC3A = emet(filAux, localC3A);
+																			
 																			sprintf(string,"Comprovacio de tipus - Perdua de presicio en l'assignacio (cast) al tipus %d.", $1.tipus);
 																			missatgeWarning(string,$1.rows, $1.columns);
 																		break;

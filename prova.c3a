@@ -1,2 +1,4 @@
 $t1 := b MULF c
-$t2 := a ADDF b
+$t2 := a ADDF $t1
+$t3 := I2F x
+$t4 := $t3

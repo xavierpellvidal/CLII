@@ -1,5 +1,6 @@
 main(){
-	float a, b, c, x; 
+	float a, b, c; 
+	int x;
 	x = a + ( b * c );
 }
 
