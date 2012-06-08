@@ -90,9 +90,8 @@ typedef union YYSTYPE
 {
 
 /* Line 1685 of yacc.c  */
-#line 89 "gramatica.y"
+#line 87 "gramatica.y"
 
-	
 	struct{
 		char *lexema;
 		char *lexemac3a;
@@ -104,12 +103,11 @@ typedef union YYSTYPE
 		int sizeList;
 		int tipusTypedef;
 	}ident;
-		
 
 
 
 /* Line 1685 of yacc.c  */
-#line 113 "gramaticay.tab.h"
+#line 111 "gramaticay.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -40,11 +40,9 @@ char *nom_programa;
 char *nom_ambit;
 char *nom_funcio;
 char *punter;
-char *paramCall;
 
 char *cast;
 char *op;
-
 
 taula globalRA, localRA;
 fila filaAux;
@@ -87,7 +85,6 @@ sym_value_type info, infoAux;
 %}
 
 %union{
-	
 	struct{
 		char *lexema;
 		char *lexemac3a;
@@ -99,7 +96,6 @@ sym_value_type info, infoAux;
 		int sizeList;
 		int tipusTypedef;
 	}ident;
-		
 }
 
 %token<ident> BREAK CASE CHAR CONTINUE DEFAULT DO DOUBLE ELSE FLOAT FOR IF INT LONG
@@ -315,7 +311,8 @@ postfix_expression : primary_expression 	{
 															ambit_actual = sym_get_scope();
 															
 															error_sym=sym_global_lookup(nom_funcio,&info);
-															
+															printf("%d \n",numParam);
+															printf("%d \n",info.nParamsFuncio);
 															if(numParam != info.nParamsFuncio ){
 																
 																sprintf(string,"ERROR. En numero d'arguments no coincideix amb la declaracio.");
@@ -323,13 +320,11 @@ postfix_expression : primary_expression 	{
 																YYERROR;
 															}
 															
-															/*-----------------C3A------------------*/
-															printf("TOTAL PARAMS %d", info.nParamsFuncio);
-															for(i=0; i<info.nParamsFuncio; i++){
+															for(i=0;i<info.nParamsFuncio;i++){
 																filAux = inicialitzarFil(filAux);
-																printf("AAAAAAA %s", info.parametres[i].paramc3a);
-																										
-																localC3A = emet(filAux, localC3A);
+																printf("  %s  ",info.parametres[i].parametrec3a);
+																sprintf(filAux.info, "PARAM %s", info.parametres[i].parametrec3a);
+																localC3A = emet(filAux, localC3A);															
 															}
 															
 															$$.tipus = info.tipusFunction;
@@ -345,6 +340,9 @@ postfix_expression : primary_expression 	{
 	;
 	
 argument_expression_list : assignment_expression 	{
+													inicialitzarInfo();
+															
+													/*Recuperem la funcio per guardar-hi el parametre*/
 													error_sym=sym_global_lookup(nom_funcio,&info);
 													
 													if(info.parametres[numParam].type != $1.tipus){
@@ -353,30 +351,33 @@ argument_expression_list : assignment_expression 	{
 														YYERROR;
 													}
 													else{
-														/*-----------------C3A------------------*/	
-														info.parametres[numParam].paramc3a = (char*)malloc(10*sizeof(char));
-														strcpy(info.parametres[numParam].paramc3a, $1.lexemac3a);
+														/*******************C3A******************/
+														strcpy(info.parametres[numParam].parametrec3a, $1.lexemac3a);
 														
-														punter = info.parametres[numParam].lexema;
-														error_sym = sym_global_remove(punter);
-														error_sym = sym_global_add(punter, &info);
+														sym_global_remove(nom_funcio);
+														sym_global_add(nom_funcio,&info);
 														
 														numParam++;
-														
 													}
 													
 													sprintf(string,"argument_expression_list <- assignment_expression ");
 													string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	| argument_expression_list ',' assignment_expression 	{
+															inicialitzarInfo();
+															/*Recuperem la funcio per guardar-hi el parametre*/
+															error_sym=sym_global_lookup(nom_funcio,&info);
+															
 															if(info.parametres[numParam].type != $3.tipus){
 																sprintf(string,"ERROR. El tipus del parametre %d no coincideix amb la declaracio.", numParam + 1);
 																missatgeError(string,$3.rows, $3.columns);
 																YYERROR;
 															}
 															else{
-																/*-----------------C3A------------------*/	
-																
-																
+																/*******************C3A******************/
+																strcpy(info.parametres[numParam].parametrec3a, $3.lexemac3a);
+																sym_global_remove(nom_funcio);
+																sym_global_add(nom_funcio,&info);
+																numParam++;
 															}
 															sprintf(string,"argument_expression_list <- argument_expression_list ',' assignment_expression");
 															string_output(string, $<ident>1.rows, $<ident>1.columns);}
@@ -2251,7 +2252,6 @@ int init_analisi_sintactic(char* filename){
 	
 	cast = (char *)malloc(20*sizeof(char));
 	op = (char *)malloc(5*sizeof(char));
-	paramCall = (char *)malloc(20*sizeof(char));
 	
 	nom_programa = (char *)malloc(sizeof(filename));
 	strcpy(nom_programa, filename);
@@ -2299,6 +2299,12 @@ void inicialitzarInfo(){
 	info.nParamsFuncio = UNDEF;
 	info.isFunctionDeclaration = 0;
 	
+	
+	/*
+	strcpy(info.parametres[1].parametrec3a, "holsdsdsdsda");
+	strcpy(info.parametres[2].parametrec3a, "holsdsdsda");
+	*/
+	
 	strcpy(infoAux.lexema, "");
 	strcpy(infoAux.lexemac3a, "");
 	infoAux.lenght = 1;
@@ -2310,6 +2316,7 @@ void inicialitzarInfo(){
 	infoAux.tipusFunction = UNDEF;
 	infoAux.nParamsFuncio = UNDEF;
 	infoAux.isFunctionDeclaration = 0;
+	
 	
 }
 

@@ -1,13 +1,14 @@
-Funcio prova:
+Funcio ppp:
 Paràmetres de la funció: 
-	Nom: a				 Mida: 4	 Offset: 0	 
+	Nom: c				 Mida: 4	 Offset: 0	 
+	Nom: b				 Mida: 4	 Offset: 4	 
 Variables locals de la funció: 
 ------------------------------------------------ 
-Funcio prova:
+Funcio ppp:
 Paràmetres de la funció: 
 	Nom: return				 Mida: 4	 Offset: 0	 
+	Nom: 				 Mida: 0	 Offset: 0	 
 Variables locals de la funció: 
-	Nom: g				 Mida: 4	 Offset: 4	 
 ------------------------------------------------ 
 Taula global:
 Variables locals de la funció: 

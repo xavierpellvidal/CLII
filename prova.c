@@ -1,11 +1,11 @@
 
-void prova(int a){
+void ppp(int c, int b){
 
 }
 
-main(int g){
+main(){
 	
-	prova(2);
+	ppp(2+2, 3+1);
 	
 }
 

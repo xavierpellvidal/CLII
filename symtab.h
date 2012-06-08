@@ -14,7 +14,7 @@ typedef struct{
 	char *lexema;
 	int type;
 	int hasName;
-	char *paramc3a;
+	char parametrec3a[20];
 }param;
 
 /* The type of the value field
