@@ -1,6 +1,6 @@
-int main(int d, float b){
-	float f[40];
-	int a;
+main(){
+	float a, b, c, x; 
+	x = a + ( b * c );
 }
 
 

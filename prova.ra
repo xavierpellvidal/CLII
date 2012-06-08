@@ -1,9 +1,10 @@
 Funcio main:
-Nom: d				 Mida: 4	 Offset: 0	 
-Nom: b				 Mida: 4	 Offset: 4	 
-Nom: f				 Mida: 4	 Offset: 8	 
-Nom: a				 Mida: 4	 Offset: 168	 
-Nom: return				 Mida: 4	 Offset: 172	 
+Variables locals de la funció: 
+	Nom: a				 Mida: 4	 Offset: 0	 
+	Nom: b				 Mida: 4	 Offset: 4	 
+	Nom: c				 Mida: 4	 Offset: 8	 
+	Nom: x				 Mida: 4	 Offset: 12	 
 ------------------------------------------------ 
 Taula global:
+Variables locals de la funció: 
 ------------------------------------------------ 

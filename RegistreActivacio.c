@@ -18,7 +18,7 @@ taula introduirFila(fila fil, taula t){
 	return t;
 }
 
-void imprimirTaula(taula t, char* nom){
+void imprimirTaula(taula t, char* nom, int nparams){
 	int i = 0;
 	fila aux;
 	char string[100];
@@ -27,9 +27,20 @@ void imprimirTaula(taula t, char* nom){
 	
 	sprintf(string, "%s:\n", nom);
 	fprintf(dFile, string);
-	for(i = 0; i < t.nFiles; i++){
+	if(nparams > 0){
+		fprintf(dFile, "Paràmetres de la funció: \n");
+		for(i = 0; i < nparams; i++){
+			aux = t.registre[i];
+			sprintf(string, "\tNom: %s\t\t\t\t Mida: %d\t Offset: %d\t \n", aux.nom, aux.mida, aux.offset);
+			fprintf(dFile, string);
+		}
+	}
+	
+	fprintf(dFile, "Variables locals de la funció: \n");
+	
+	for(i=i; i < t.nFiles; i++){
 		aux = t.registre[i];
-		sprintf(string, "Nom: %s\t\t\t\t Mida: %d\t Offset: %d\t \n", aux.nom, aux.mida, aux.offset);
+		sprintf(string, "\tNom: %s\t\t\t\t Mida: %d\t Offset: %d\t \n", aux.nom, aux.mida, aux.offset);
 		fprintf(dFile, string);
 	}
 	fprintf(dFile, "------------------------------------------------ \n");

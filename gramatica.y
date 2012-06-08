@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "RegistreActivacio.h"
+#include "RegistreC3A.h"
 #include "gramaticay.tab.h"
 #include "symtab.h"
 
@@ -40,8 +41,12 @@ char *nom_ambit;
 char *nom_funcio;
 char *punter;
 
+char *cast;
+
 taula globalRA, localRA;
 fila filaAux;
+registre globalC3A, localC3A;
+fil filAux;
 int offsetL = 0;
 int offsetG = 0;
 
@@ -81,6 +86,7 @@ sym_value_type info, infoAux;
 %union{
 	struct{
 		char *lexema;
+		char *lexemac3a;
 		int lenght;
 		int rows;
 		int columns;
@@ -107,7 +113,7 @@ sym_value_type info, infoAux;
 
 %right<ident>'='
 %left<ident>'+''-'
-%left<ident>'*''/'
+%left<ident>'*''/''%'
 
 /* Hem de borrar el ELSE de la llista de tokens si el tenim definit com no associatiu? */
 %nonassoc IF_PREC
@@ -138,6 +144,9 @@ primary_expression : IDENTIFIER {
 									    $$.lexema = $1.lexema;
 										$$.tipus = info.tipus;
 									}
+									
+									/*-----------------C3A------------------*/
+									$$.lexemac3a = $1.lexema;
 								}
 								else{
 									sprintf(string,"ERROR. Variable %s no definida en l'ambit %d.", $1.lexema, ambit_actual);
@@ -150,10 +159,18 @@ primary_expression : IDENTIFIER {
 								sprintf(string,"primary_expression <- constant ");
 								string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	| STRING 					{
+		
+								/*-----------------C3A------------------*/
+								$$.lexemac3a = $1.lexemac3a;
+								
 								sprintf(string,"primary_expression <- STRING %s", $<ident>1.lexema);
 								string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	| '(' expression ')' 		{
 								$$.tipus = $2.tipus;
+								
+								/*-----------------C3A------------------*/
+								$$.lexemac3a = $2.lexema;
+								
 								sprintf(string,"primary_expression <- (expression) ");
 								string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	;
@@ -162,18 +179,30 @@ constant : INTEGER_CONSTANT {
 							$$.tipus = ID_INT;
 							$$.sizeList = UNDEF;
 							$$.valor= ID_INT;
+							
+							/*-----------------C3A------------------*/
+							$$.lexemac3a = $1.lexema;
+							
 							sprintf(string,"constant <- INTEGER_CONSTANT %s", $<ident>1.lexema);
 							string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	| CHARACTER_CONSTANT 	{
 							$$.tipus = ID_CHAR;
 							$$.sizeList = UNDEF;
 							$$.valor = ID_CHAR;
+							
+							/*-----------------C3A------------------*/
+							$$.lexemac3a = $1.lexema;
+							
 							sprintf(string,"constant <- CHARACTER_CONSTANT %s", $<ident>1.lexema);
 							string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	| FLOATING_CONSTANT 	{
 							$$.tipus = ID_FLOAT;
 							$$.sizeList = UNDEF;
 							$$.valor = ID_FLOAT;
+							
+							/*-----------------C3A------------------*/
+							$$.lexemac3a = $1.lexema;
+							
 							sprintf(string,"constant <- FLOATING_CONSTANT %s", $<ident>1.lexema);
 							string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	;
@@ -321,7 +350,15 @@ unary_expression : postfix_expression 	{
 										string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	| DEC_OP unary_expression 			{sprintf(string,"unary_expression <- DEC_OP unary_expression ");
 										string_output(string, $<ident>1.rows, $<ident>1.columns);}
-	| unary_operator cast_expression 	{sprintf(string,"unary_expression <- unary_operator cast_expression ");
+	| unary_operator cast_expression 	{
+										if ($2.tipus != ID_CHAR){
+											/*-----------------C3A------------------*/
+											$$.lexemac3a = nouTemp();
+											filAux = inicialitzarFil(filAux);
+											sprintf(filAux.info, "%s %s %s %s", $$.lexemac3a, ":=", signChange($2.tipus), $2.lexemac3a);
+											localC3A = emet(filAux, localC3A);
+										}
+										sprintf(string,"unary_expression <- unary_operator cast_expression ");
 										string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	| SIZEOF unary_expression 			{sprintf(string,"unary_expression <- SIZEOF unary_expression ");
 										string_output(string, $<ident>1.rows, $<ident>1.columns);}
@@ -355,11 +392,25 @@ cast_expression : unary_expression 		{
 												break;
 												case COMPTIPUS_DIF_RED_PRIMER:
 													$$.tipus = $2.tipus;
+													
+													/*-----------------C3A------------------*/
+													cast = nouTemp();
+													filAux = inicialitzarFil(filAux);
+													sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($2.tipus, $4.tipus, COMPTIPUS_DIF_RED_PRIMER), $4.lexemac3a);
+													localC3A = emet(filAux, localC3A);
+													
 													sprintf(string,"(Cast) a tipus %d.", $2.tipus);
 													missatgeWarning(string,$1.rows, $1.columns);
 												break;
 												case COMPTIPUS_DIF_RED_SEGON:
 													$$.tipus = $2.tipus;
+													
+													/*-----------------C3A------------------*/
+													cast = nouTemp();
+													filAux = inicialitzarFil(filAux);
+													sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($2.tipus, $4.tipus, COMPTIPUS_DIF_RED_SEGON), $2.lexemac3a);
+													localC3A = emet(filAux, localC3A);
+													
 													sprintf(string,"(Cast) a tipus %d.", $2.tipus);
 													missatgeWarning(string,$1.rows, $1.columns);
 												break;
@@ -394,16 +445,47 @@ multiplicative_expression : cast_expression {
 														switch (comprovacio) {
 															case COMPTIPUS_IGUALS:
 																$$.tipus = $1.tipus;
+																
+																/*-----------------C3A------------------*/
+																$$.lexemac3a = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s %s", $$.lexemac3a, ":=", $1.lexemac3a, obtainOp($2.lexema, $1.tipus), $3.lexemac3a);
+																localC3A = emet(filAux, localC3A);
+																
 																sprintf(string,"Operacio correcta del mateix tipus. Tipus %d.", info.tipus);
 																missatgeTS(string,$1.rows, $1.columns);
 															break;
 															case COMPTIPUS_DIF_RED_PRIMER:
 																$$.tipus = $1.tipus;
+																
+																/*-----------------C3A------------------*/
+																cast = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
+																localC3A = emet(filAux, localC3A);
+																
+																$$.lexemac3a = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s %s", $$.lexemac3a, ":=", $1.lexemac3a, obtainOp($2.lexema, $1.tipus), cast);
+																localC3A = emet(filAux, localC3A);
+																
 																sprintf(string,"Comprovacio de tipus - Cast pel tipus del primer operand %d.", $1.tipus);
 																missatgeWarning(string,$1.rows, $1.columns);
 															break;
 															case COMPTIPUS_DIF_RED_SEGON:
 																$$.tipus = $3.tipus;
+																
+																/*-----------------C3A------------------*/
+																cast = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
+																localC3A = emet(filAux, localC3A);
+																
+																$$.lexemac3a = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s %s", $$.lexemac3a, ":=", cast, obtainOp($2.lexema, $3.tipus), $3.lexemac3a);
+																localC3A = emet(filAux, localC3A);
+																
 																sprintf(string,"Comprovacio de tipus - Cast pel tipus del segon operand %d.", $3.tipus);
 																missatgeWarning(string,$1.rows, $1.columns);
 															break;
@@ -413,6 +495,7 @@ multiplicative_expression : cast_expression {
 																YYERROR;
 															break;
 														}
+														
 													}
 													else{
 														sprintf(string,"ERROR. Variable sense tipus.");
@@ -431,16 +514,47 @@ multiplicative_expression : cast_expression {
 														switch (comprovacio) {
 															case COMPTIPUS_IGUALS:
 																$$.tipus = $1.tipus;
+																
+																/*-----------------C3A------------------*/
+																$$.lexemac3a = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s %s", $$.lexemac3a, ":=", $1.lexemac3a, obtainOp($2.lexema, $1.tipus), $3.lexemac3a);
+																localC3A = emet(filAux, localC3A);
+																
 																sprintf(string,"Operacio correcta del mateix tipus. Tipus %d.", info.tipus);
 																missatgeTS(string,$1.rows, $1.columns);
 															break;
 															case COMPTIPUS_DIF_RED_PRIMER:
 																$$.tipus = $1.tipus;
+																
+																/*-----------------C3A------------------*/
+																cast = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
+																localC3A = emet(filAux, localC3A);
+																
+																$$.lexemac3a = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s %s", $$.lexemac3a, ":=", $1.lexemac3a, obtainOp($2.lexema, $1.tipus), cast);
+																localC3A = emet(filAux, localC3A);
+																
 																sprintf(string,"Comprovacio de tipus - Cast pel tipus del primer operand %d.", $1.tipus);
 																missatgeWarning(string,$1.rows, $1.columns);
 															break;
 															case COMPTIPUS_DIF_RED_SEGON:
 																$$.tipus = $3.tipus;
+																
+																/*-----------------C3A------------------*/
+																cast = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
+																localC3A = emet(filAux, localC3A);
+																
+																$$.lexemac3a = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s %s", $$.lexemac3a, ":=", cast, obtainOp($2.lexema, $3.tipus), $3.lexemac3a);
+																localC3A = emet(filAux, localC3A);
+																
 																sprintf(string,"Comprovacio de tipus - Cast pel tipus del segon operand %d.", $3.tipus);
 																missatgeWarning(string,$1.rows, $1.columns);
 															break;
@@ -467,16 +581,47 @@ multiplicative_expression : cast_expression {
 														switch (comprovacio) {
 															case COMPTIPUS_IGUALS:
 																$$.tipus = $1.tipus;
+																
+																/*-----------------C3A------------------*/
+																$$.lexemac3a = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s %s", $$.lexemac3a, ":=", $1.lexemac3a, obtainOp($2.lexema, $1.tipus), $3.lexemac3a);
+																localC3A = emet(filAux, localC3A);
+																
 																sprintf(string,"Operacio correcta del mateix tipus. Tipus %d.", info.tipus);
 																missatgeTS(string,$1.rows, $1.columns);
 															break;
 															case COMPTIPUS_DIF_RED_PRIMER:
 																$$.tipus = $1.tipus;
+																
+																/*-----------------C3A------------------*/
+																cast = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
+																localC3A = emet(filAux, localC3A);
+																
+																$$.lexemac3a = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s %s", $$.lexemac3a, ":=", $1.lexemac3a, obtainOp($2.lexema, $1.tipus), cast);
+																localC3A = emet(filAux, localC3A);
+																
 																sprintf(string,"Comprovacio de tipus - Cast pel tipus del primer operand %d.", $1.tipus);
 																missatgeWarning(string,$1.rows, $1.columns);
 															break;
 															case COMPTIPUS_DIF_RED_SEGON:
 																$$.tipus = $3.tipus;
+																
+																/*-----------------C3A------------------*/
+																cast = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
+																localC3A = emet(filAux, localC3A);
+																
+																$$.lexemac3a = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s %s", $$.lexemac3a, ":=", cast, obtainOp($2.lexema, $3.tipus), $3.lexemac3a);
+																localC3A = emet(filAux, localC3A);
+																
 																sprintf(string,"Comprovacio de tipus - Cast pel tipus del segon operand %d.", $3.tipus);
 																missatgeWarning(string,$1.rows, $1.columns);
 															break;
@@ -485,7 +630,7 @@ multiplicative_expression : cast_expression {
 																missatgeError(string,$1.rows, $1.columns);
 																YYERROR;
 															break;
-														}
+														}	
 													}
 													else {
 														sprintf(string,"ERROR. Variable sense tipus.");
@@ -507,18 +652,49 @@ additive_expression : multiplicative_expression 		{
 															comprovacio = comprovacioTipus($1.tipus, $3.tipus);
 															
 															switch (comprovacio) {
-																case COMPTIPUS_IGUALS:
-																	$$.tipus = $1.tipus;
-																	sprintf(string,"Operacio correcta del mateix tipus. Tipus %d.", info.tipus);
-																	missatgeTS(string,$1.rows, $1.columns);
-																break;
-																case COMPTIPUS_DIF_RED_PRIMER:
+															case COMPTIPUS_IGUALS:
 																$$.tipus = $1.tipus;
+																
+																/*-----------------C3A------------------*/
+																$$.lexemac3a = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s %s", $$.lexemac3a, ":=", $1.lexemac3a, obtainOp($2.lexema, $1.tipus), $3.lexemac3a);
+																localC3A = emet(filAux, localC3A);
+																
+																sprintf(string,"Operacio correcta del mateix tipus. Tipus %d.", info.tipus);
+																missatgeTS(string,$1.rows, $1.columns);
+															break;
+															case COMPTIPUS_DIF_RED_PRIMER:
+																$$.tipus = $1.tipus;
+																
+																/*-----------------C3A------------------*/
+																cast = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
+																localC3A = emet(filAux, localC3A);
+																
+																$$.lexemac3a = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s %s", $$.lexemac3a, ":=", $1.lexemac3a, obtainOp($2.lexema, $1.tipus), cast);
+																localC3A = emet(filAux, localC3A);
+																
 																sprintf(string,"Comprovacio de tipus - Cast pel tipus del primer operand %d.", $1.tipus);
 																missatgeWarning(string,$1.rows, $1.columns);
 															break;
 															case COMPTIPUS_DIF_RED_SEGON:
 																$$.tipus = $3.tipus;
+																
+																/*-----------------C3A------------------*/
+																cast = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
+																localC3A = emet(filAux, localC3A);
+																
+																$$.lexemac3a = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s %s %s %s %s", $$.lexemac3a, ":=", cast, obtainOp($2.lexema, $3.tipus), $3.lexemac3a);
+																localC3A = emet(filAux, localC3A);
+																
 																sprintf(string,"Comprovacio de tipus - Cast pel tipus del segon operand %d.", $3.tipus);
 																missatgeWarning(string,$1.rows, $1.columns);
 															break;
@@ -544,16 +720,47 @@ additive_expression : multiplicative_expression 		{
 															switch (comprovacio) {
 																case COMPTIPUS_IGUALS:
 																	$$.tipus = $1.tipus;
+																	
+																	/*-----------------C3A------------------*/
+																	$$.lexemac3a = nouTemp();
+																	filAux = inicialitzarFil(filAux);
+																	sprintf(filAux.info, "%s %s %s %s %s", $$.lexemac3a, ":=", $1.lexemac3a, obtainOp($2.lexema, $1.tipus), $3.lexemac3a);
+																	localC3A = emet(filAux, localC3A);
+																	
 																	sprintf(string,"Operacio correcta del mateix tipus. Tipus %d.", info.tipus);
 																	missatgeTS(string,$1.rows, $1.columns);
 																break;
 																case COMPTIPUS_DIF_RED_PRIMER:
 																	$$.tipus = $1.tipus;
+																	
+																	/*-----------------C3A------------------*/
+																	cast = nouTemp();
+																	filAux = inicialitzarFil(filAux);
+																	sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
+																	localC3A = emet(filAux, localC3A);
+																	
+																	$$.lexemac3a = nouTemp();
+																	filAux = inicialitzarFil(filAux);
+																	sprintf(filAux.info, "%s %s %s %s %s", $$.lexemac3a, ":=", $1.lexemac3a, obtainOp($2.lexema, $1.tipus), cast);
+																	localC3A = emet(filAux, localC3A);
+																	
 																	sprintf(string,"Comprovacio de tipus - Cast pel tipus del primer operand %d.", $1.tipus);
 																	missatgeWarning(string,$1.rows, $1.columns);
 																break;
 																case COMPTIPUS_DIF_RED_SEGON:
 																	$$.tipus = $3.tipus;
+																	
+																	/*-----------------C3A------------------*/
+																	cast = nouTemp();
+																	filAux = inicialitzarFil(filAux);
+																	sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
+																	localC3A = emet(filAux, localC3A);
+																	
+																	$$.lexemac3a = nouTemp();
+																	filAux = inicialitzarFil(filAux);
+																	sprintf(filAux.info, "%s %s %s %s %s", $$.lexemac3a, ":=", cast, obtainOp($2.lexema, $3.tipus), $3.lexemac3a);
+																	localC3A = emet(filAux, localC3A);
+																	
 																	sprintf(string,"Comprovacio de tipus - Cast pel tipus del segon operand %d.", $3.tipus);
 																	missatgeWarning(string,$1.rows, $1.columns);
 																break;
@@ -1794,9 +2001,13 @@ function_definition : declarator {
 														
 														
 														
+														/*-----------------C3A----------------*/
+														imprimirTaula(localRA, string, info.nParamsFuncio);
+														imprimirT(localC3A);
 														
-														imprimirTaula(localRA, string);
 														localRA = esborrarTaula(localRA);
+														localC3A = esborrarT(localC3A);
+														
 														offsetL = 0;
 													}
 													isReturn = 0;
@@ -1883,9 +2094,13 @@ function_definition : declarator {
 																
 																missatgeTS(string,$2.rows, $2.columns);
 																sprintf(string, "Funcio %s", nom_funcio);
-																imprimirTaula(localRA, string);
+																
+																/*-----------------C3A----------------*/
+																imprimirTaula(localRA, string, info.nParamsFuncio);
+																imprimirT(localC3A);
 																																
 																localRA = esborrarTaula(localRA);
+																localC3A = esborrarT(localC3A);
 																offsetL = 0;
 															}
 															isReturn = 0;
@@ -1941,13 +2156,15 @@ int init_analisi_sintactic(char* filename){
 	globalRA = inicialitzarTaula(globalRA);
 	inicialitzarFitxer(filename);
 	
+	globalC3A = inicialitzarT(globalC3A);
+	localC3A = inicialitzarT(localC3A);
+	inicialitzarFit(filename);
+	
+	cast = (char *)malloc(20*sizeof(char));
 	
 	nom_programa = (char *)malloc(sizeof(filename));
 	strcpy(nom_programa, filename);
-	/*yyout = fopen(filename,"w");*/
-	/*if (yyout == NULL){*/
-	/*	error = EXIT_FAILURE;*/
-	/*}*/
+	
 	return 0;
 }
 
@@ -1965,7 +2182,8 @@ int analisi_semantic(){
 int end_analisi_sintactic(){
 	int error;
 	
-	imprimirTaula(globalRA, "Taula global");
+	imprimirTaula(globalRA, "Taula global", 0);
+	imprimirT(globalC3A);
 	
 	error = fclose(yyout);
 	
@@ -1979,6 +2197,7 @@ int end_analisi_sintactic(){
 
 void inicialitzarInfo(){
 	strcpy(info.lexema, "");
+	strcpy(info.lexemac3a, "");
 	info.lenght = 1;
 	info.rows = 0;
 	info.columns = 0;
@@ -1990,6 +2209,7 @@ void inicialitzarInfo(){
 	info.isFunctionDeclaration = 0;
 	
 	strcpy(infoAux.lexema, "");
+	strcpy(infoAux.lexemac3a, "");
 	infoAux.lenght = 1;
 	infoAux.rows = 0;
 	infoAux.columns = 0;

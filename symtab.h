@@ -20,6 +20,7 @@ typedef struct{
 of symbol table entries                      */
 typedef struct {
 		char lexema[50];
+		char lexemac3a[50];
 		int lenght;
 		char valor[20];
 		int rows;

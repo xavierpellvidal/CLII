@@ -14,7 +14,7 @@ typedef struct taula {
 } taula; 
 
 taula introduirFila(fila, taula);
-void imprimirTaula(taula, char*);
+void imprimirTaula(taula, char*, int);
 fila inicialitzarFila(fila);
 taula inicialitzarTaula(taula);
 void inicialitzarFitxer();
