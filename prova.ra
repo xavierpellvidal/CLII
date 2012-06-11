@@ -1,9 +1,8 @@
 Funcio ppp:
 Paràmetres de la funció: 
-	Nom: return				 Mida: 4	 Offset: 0	 
-	Nom: c				 Mida: 4	 Offset: 4	 
+	Nom: c				 Mida: 4	 Offset: 0	 
+	Nom: b				 Mida: 4	 Offset: 4	 
 Variables locals de la funció: 
-	Nom: b				 Mida: 4	 Offset: 8	 
 ------------------------------------------------ 
 Funcio main:
 Variables locals de la funció: 

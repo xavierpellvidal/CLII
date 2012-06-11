@@ -2224,7 +2224,7 @@ yyreduce:
 															}else{							
 																filAux = inicialitzarFil(filAux);
 																sprintf(filAux.info, "CALL %s, %d", nom_funcio, numParam);
-																
+																localC3A = emet(filAux, localC3A);
 															}
 															
 															/*Restart function name */

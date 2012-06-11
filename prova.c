@@ -1,7 +1,7 @@
 
-int ppp(int c, int b){
+void ppp(int c, int b){
 
-	return 2;
+	
 }
 
 main(){
