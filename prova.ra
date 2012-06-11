@@ -1,14 +1,13 @@
 Funcio ppp:
 Paràmetres de la funció: 
-	Nom: c				 Mida: 4	 Offset: 0	 
-	Nom: b				 Mida: 4	 Offset: 4	 
-Variables locals de la funció: 
------------------------------------------------- 
-Funcio ppp:
-Paràmetres de la funció: 
 	Nom: return				 Mida: 4	 Offset: 0	 
-	Nom: 				 Mida: 0	 Offset: 0	 
+	Nom: c				 Mida: 4	 Offset: 4	 
 Variables locals de la funció: 
+	Nom: b				 Mida: 4	 Offset: 8	 
+------------------------------------------------ 
+Funcio main:
+Variables locals de la funció: 
+	Nom: return				 Mida: 4	 Offset: 0	 
 ------------------------------------------------ 
 Taula global:
 Variables locals de la funció: 

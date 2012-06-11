@@ -1,6 +1,10 @@
+
 START ppp 
+RETURN 2
+
 START main 
 $t1 := 2 ADDI 2
 $t2 := 3 ADDI 1
 PARAM $t1
 PARAM $t2
+$t3 := CALL ppp, 2

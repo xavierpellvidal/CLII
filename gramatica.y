@@ -44,6 +44,8 @@ char *punter;
 char *cast;
 char *op;
 
+/*Punter per a afegir cometes simples als caracters*/
+char *aux;
 taula globalRA, localRA;
 fila filaAux;
 registre globalC3A, localC3A;
@@ -192,7 +194,9 @@ constant : INTEGER_CONSTANT {
 							$$.valor = ID_CHAR;
 							
 							/*-----------------C3A------------------*/
-							$$.lexemac3a = $1.lexema;
+							/*$$.lexemac3a = $1.lexema;*/
+							sprintf(aux,"'%s'",$1.lexema);
+							$$.lexemac3a = aux;
 							
 							sprintf(string,"constant <- CHARACTER_CONSTANT %s", $<ident>1.lexema);
 							string_output(string, $<ident>1.rows, $<ident>1.columns);}
@@ -328,6 +332,24 @@ postfix_expression : primary_expression 	{
 															}
 															
 															$$.tipus = info.tipusFunction;
+															
+															
+															/*Check if function have a return statement*/
+															
+															if(info.tipusFunction != ID_VOID){
+																$$.lexemac3a = nouTemp();
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "%s := CALL %s, %d", $$.lexemac3a, nom_funcio, numParam);
+																localC3A = emet(filAux, localC3A);	
+																
+															}else{							
+																filAux = inicialitzarFil(filAux);
+																sprintf(filAux.info, "CALL %s, %d", nom_funcio, numParam);
+																
+															}
+															
+															/*Restart function name */
+															strcpy(nom_funcio, nom_ambit);
 															
 															sprintf(string,"postfix_expression <- postfix_expression '(' argument_expression_list ')' ");
 															string_output(string, $<ident>1.rows, $<ident>1.columns);}
@@ -1901,7 +1923,7 @@ compound_statement : '{' {
 											
 											if(error_sym == SYMTAB_OK){
 												if(info.tipusFunction != ID_VOID){
-													sprintf(string,"No hi ha sentencia RETURN. falta retornar un valor de tipus %d ", info.tipusFunction);
+													sprintf(string,"No hi ha sentencia RETURN. Falta retornar un valor de tipus %d ", info.tipusFunction);
 													missatgeWarning(string,$1.rows, $1.columns);
 												}
 											}
@@ -1981,13 +2003,60 @@ jump_statement : CONTINUE ';' {sprintf(string,"jump_statement <- CONTINUE ';'");
 							error_sym=sym_global_lookup(nom_funcio,&info);
 							
 							if(error_sym == SYMTAB_OK){
+							
 								if(info.tipusFunction != $2.tipus){
+								
+									int comprovacio = 0;
+																	
+									comprovacio = comprovacioTipus(info.tipusFunction, $2.tipus);
+									
+									switch (comprovacio) {
+										case COMPTIPUS_DIF_RED_PRIMER:
+											/*-----------------C3A------------------*/
+											cast = nouTemp();
+											filAux = inicialitzarFil(filAux);
+											sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast(info.tipusFunction, $2.tipus, COMPTIPUS_DIF_RED_PRIMER), $2.lexemac3a);
+											localC3A = emet(filAux, localC3A);
+											
+											filAux = inicialitzarFil(filAux);
+											sprintf(filAux.info, "%s %s %s", $2.lexemac3a, ":=", cast);
+											localC3A = emet(filAux, localC3A);
+											
+											sprintf(string,"Comprovacio de tipus - (cast) al tipus %d ", $1.tipus);
+											missatgeWarning(string,$2.rows, $2.columns);
+										break;
+										case COMPTIPUS_DIF_RED_SEGON:
+											/*-----------------C3A------------------*/
+											cast = nouTemp();
+											filAux = inicialitzarFil(filAux);
+											sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast(info.tipusFunction, $2.tipus, COMPTIPUS_DIF_RED_SEGON), $2.lexemac3a);
+											localC3A = emet(filAux, localC3A);
+											
+											filAux = inicialitzarFil(filAux);
+											sprintf(filAux.info, "%s %s %s", $2.lexemac3a, ":=", cast);
+											localC3A = emet(filAux, localC3A);
+											
+											sprintf(string,"Comprovacio de tipus - Perdua de presicio en l'assignacio (cast) al tipus %d.", $1.tipus);
+											missatgeWarning(string,$2.rows, $2.columns);
+										break;
+										case COMPTIPUS_DIF_NO_RED:
+											sprintf(string,"ERROR. Comprovacio de tipus - Tipus incorrectes a la assignacio.");
+											missatgeError(string,$1.rows, $1.columns);
+											YYERROR;
+										break;
+									}
+								
 									sprintf(string,"La sentencia RETURN retorna un valor que no es del tipus de la funcio.");
 									missatgeWarning(string,$1.rows, $1.columns);
 								}
+								
 								isReturn = 1;
 							}
-						  
+							
+							filAux = inicialitzarFil(filAux);
+							sprintf(filAux.info, "RETURN %s", $2.lexemac3a);
+							localC3A = emet(filAux, localC3A);	
+							
 							sprintf(string,"jump_statement <- RETURN expression ';'");
 							string_output(string,$<ident>1.rows,$<ident>1.columns);}
 	;
@@ -2024,6 +2093,9 @@ function_definition : declarator {
 									else {
 										
 										/*-----------------C3A------------------*/
+										filAux = inicialitzarFil(filAux);
+										localC3A = emet(filAux, localC3A);
+										
 										filAux = inicialitzarFil(filAux);
 										sprintf(filAux.info, "%s %s ", "START", nom_funcio);
 										localC3A = emet(filAux, localC3A);
@@ -2127,6 +2199,9 @@ function_definition : declarator {
 												mostraError(error_sym,(const char *)&nom_ambit);
 											else {
 												/*-----------------C3A------------------*/
+												filAux = inicialitzarFil(filAux);
+												localC3A = emet(filAux, localC3A);
+												
 												filAux = inicialitzarFil(filAux);
 												sprintf(filAux.info, "%s %s ", "START", nom_funcio);
 												localC3A = emet(filAux, localC3A);
@@ -2252,6 +2327,7 @@ int init_analisi_sintactic(char* filename){
 	
 	cast = (char *)malloc(20*sizeof(char));
 	op = (char *)malloc(5*sizeof(char));
+	aux = (char *)malloc(20*sizeof(char));
 	
 	nom_programa = (char *)malloc(sizeof(filename));
 	strcpy(nom_programa, filename);
