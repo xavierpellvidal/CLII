@@ -21,6 +21,9 @@ veure facilment qui te mes o menys precisio.*/
 
 FILE *dFile2;
 int countNouTemp = 1;
+int sQuad = 1;
+int auxCount = 1;
+
 
 void inicialitzarFit(char* nom){
 	char string[20];
@@ -30,9 +33,14 @@ void inicialitzarFit(char* nom){
 }
 
 registre emet(fil fil, registre t){
-	t.taula[t.sQuad] = fil;
-	t.sQuad ++;
+	t.taula[t.row] = fil;
+	t.row ++;
+	sQuad++;
 	return t;
+}
+
+int getSquad(){
+	return sQuad;
 }
 
 char* nouTemp(){   
@@ -51,11 +59,14 @@ void imprimirT(registre t){
 	char string[100];
 	strcpy(string,"");
 	
-	for(i=0; i < t.sQuad; i++){
+	for(i=0; i < t.row; i++){
 		aux = t.taula[i];
-		sprintf(string, "%s\n", aux.info);
+		sprintf(string, "%d - %s\n", auxCount, aux.info);
+		auxCount++;
 		fprintf(dFile2, string);
 	}
+		sprintf(string, "\n");
+		fprintf(dFile2, string);
 }
 
 fil inicialitzarFil(fil fil){
@@ -72,17 +83,17 @@ registre inicialitzarT(registre t){
 		t.taula[i].nFila = -1;
 		t.taula[i].info= (char*)malloc(100*sizeof(char));
 	}
-	t.sQuad = 0;
+	t.row = 0;
 	return t;
 }
 
 registre esborrarT(registre t){
 	int i;
-	for(i = 0; i < t.sQuad; i++){
+	for(i = 0; i < t.row; i++){
 		t.taula[i].nFila = -1;
 		t.taula[i].info = (char*)malloc(100*sizeof(char));
 	}
-	t.sQuad = 0;
+	t.row = 0;
 	return t;
 }
 

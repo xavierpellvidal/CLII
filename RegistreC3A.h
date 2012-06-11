@@ -7,7 +7,7 @@ typedef struct fil {
 } fil;
 	
 typedef struct registre {
-	int sQuad;
+	int row;
 	fil *taula;
 } registre; 
 
@@ -21,3 +21,4 @@ char* nouTemp();
 char* obtainCast(int, int, int);
 char* obtainOp(char*, int);
 char* signChange(int);
+int getSquad();

@@ -99,6 +99,13 @@ typedef union YYSTYPE
 		int rows;
 		int columns;
 		int tipus;
+		int trueList[10];
+		int nTrue;
+		int falseList[10];
+		int nFalse;
+		int nextList[10];
+		int nNext;
+		int quad;
 		int valor;
 		int sizeList;
 		int tipusTypedef;
@@ -107,7 +114,7 @@ typedef union YYSTYPE
 
 
 /* Line 1685 of yacc.c  */
-#line 111 "gramaticay.tab.h"
+#line 118 "gramaticay.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

@@ -94,6 +94,13 @@ sym_value_type info, infoAux;
 		int rows;
 		int columns;
 		int tipus;
+		int trueList[10];
+		int nTrue;
+		int falseList[10];
+		int nFalse;
+		int nextList[10];
+		int nNext;
+		int quad;
 		int valor;
 		int sizeList;
 		int tipusTypedef;
@@ -315,8 +322,7 @@ postfix_expression : primary_expression 	{
 															ambit_actual = sym_get_scope();
 															
 															error_sym=sym_global_lookup(nom_funcio,&info);
-															printf("%d \n",numParam);
-															printf("%d \n",info.nParamsFuncio);
+															
 															if(numParam != info.nParamsFuncio ){
 																
 																sprintf(string,"ERROR. En numero d'arguments no coincideix amb la declaracio.");
@@ -326,7 +332,6 @@ postfix_expression : primary_expression 	{
 															
 															for(i=0;i<info.nParamsFuncio;i++){
 																filAux = inicialitzarFil(filAux);
-																printf("  %s  ",info.parametres[i].parametrec3a);
 																sprintf(filAux.info, "PARAM %s", info.parametres[i].parametrec3a);
 																localC3A = emet(filAux, localC3A);															
 															}
@@ -1945,13 +1950,14 @@ expression_statement : ';'  	{sprintf(string,"expression_statement <- ';' ");
 
 	;
 	
-selection_statement : IF '(' expression ')' statement %prec IF_PREC	{sprintf(string,"selection_statement <- IF '(' expression ')' statement");
+selection_statement : IF '(' expression ')' m statement %prec IF_PREC	{sprintf(string,"selection_statement <- IF '(' expression ')' statement");
 														string_output(string,$<ident>1.rows,$<ident>1.columns);}
 	| IF '(' expression ')' statement ELSE statement  	{sprintf(string,"selection_statement <- IF '(' expression ')' statement ELSE statement");
 														string_output(string,$<ident>1.rows,$<ident>1.columns);}
 	| SWITCH '(' expression ')' statement  				{sprintf(string,"selection_statement <- SWITCH '(' expression ')' statement");
 														string_output(string,$<ident>1.rows,$<ident>1.columns);}
 	;
+	
 	
 iteration_statement : WHILE '(' expression ')' statement 	{sprintf(string,"iteration_statement <- WHILE '(' expression ')' statement");
 															string_output(string,$<ident>1.rows,$<ident>1.columns);}
@@ -2092,10 +2098,7 @@ function_definition : declarator {
 										mostraError(error_sym,(const char *)&nom_ambit);
 									else {
 										
-										/*-----------------C3A------------------*/
-										filAux = inicialitzarFil(filAux);
-										localC3A = emet(filAux, localC3A);
-										
+										/*-----------------C3A------------------*/																				
 										filAux = inicialitzarFil(filAux);
 										sprintf(filAux.info, "%s %s ", "START", nom_funcio);
 										localC3A = emet(filAux, localC3A);
@@ -2198,10 +2201,7 @@ function_definition : declarator {
 											if (error_sym!=SYMTAB_OK)
 												mostraError(error_sym,(const char *)&nom_ambit);
 											else {
-												/*-----------------C3A------------------*/
-												filAux = inicialitzarFil(filAux);
-												localC3A = emet(filAux, localC3A);
-												
+												/*-----------------C3A------------------*/																								
 												filAux = inicialitzarFil(filAux);
 												sprintf(filAux.info, "%s %s ", "START", nom_funcio);
 												localC3A = emet(filAux, localC3A);
