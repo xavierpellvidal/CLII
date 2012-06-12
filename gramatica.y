@@ -94,11 +94,11 @@ sym_value_type info, infoAux;
 		int rows;
 		int columns;
 		int tipus;
-		int trueList[10];
+		int* trueList;
 		int nTrue;
-		int falseList[10];
+		int* falseList;
 		int nFalse;
-		int nextList[10];
+		int* nextList;
 		int nNext;
 		int quad;
 		int valor;
@@ -116,9 +116,10 @@ sym_value_type info, infoAux;
 
 %type<ident> primary_expression constant postfix_expression argument_expression_list type_specifier declaration_specifiers additive_expression
 %type<ident> function_definition declarator compound_statement init_declarator initializer init_declarator_list expression expression_statement
-%type<ident> multiplicative_expression assignment_expression unary_expression assignment_operator cast_expression initializer_list
+%type<ident> multiplicative_expression assignment_expression unary_expression assignment_operator cast_expression initializer_list m n
 %type<ident> relational_expression equality_expression logical_OR_expression logical_AND_expression translation_unit typedef_name error
-%type<ident> declaration_list declaration parameter_declaration conditional_expression constant_expression type_name specifier_qualifier_list
+%type<ident> declaration_list declaration parameter_declaration conditional_expression constant_expression type_name specifier_qualifier_list statement
+%type<ident> aux_selected_statement
  
 
 %right<ident>'='
@@ -859,6 +860,49 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 															}
 															else {
 																$$.tipus = ID_INT;
+																
+																int comprovacio = 0;
+																comprovacio = comprovacioTipus($1.tipus, $3.tipus);
+																switch (comprovacio) {
+																	case COMPTIPUS_IGUALS:
+																		$$.tipus = $1.tipus;
+																		
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s %s", cast, ":=", $1.lexemac3a, obtainCompare("LT", $1.tipus), $3.lexemac3a);
+																		
+																	break;
+																	case COMPTIPUS_DIF_RED_PRIMER:
+																		$$.tipus = $1.tipus;
+																	
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		sprintf($$.lexemac3a, "%s %s %s", $1.lexemac3a, obtainCompare("LT", $1.tipus), cast);
+																		
+																	break;
+																	case COMPTIPUS_DIF_RED_SEGON:
+																		$$.tipus = $3.tipus;
+																		
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		sprintf($$.lexemac3a, "%s %s %s", cast, obtainCompare("GT", $1.tipus),  $3.lexemac3a);
+																		
+																	break;
+																	case COMPTIPUS_DIF_NO_RED:
+																		sprintf(string,"ERROR. Comprovacio de tipus - Tipus incorrectes expressio relacional.");
+																		missatgeError(string,$1.rows, $1.columns);
+																		YYERROR;
+																	break;
+																}
 															}
 														}
 														else{
@@ -877,8 +921,57 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 																YYERROR;
 															}
 															else {
-																
 																$$.tipus = ID_INT;
+																
+																int comprovacio = 0;
+																comprovacio = comprovacioTipus($1.tipus, $3.tipus);
+																switch (comprovacio) {
+																	case COMPTIPUS_IGUALS:
+																		$$.tipus = $1.tipus;
+																		
+																		/*-----------------C3A------------------*/
+																		sprintf($$.lexemac3a, "%s %s %s", $1.lexemac3a, obtainCompare("GT", $1.tipus), $3.lexemac3a);
+																		
+																		
+																		sprintf(string,"Operacio correcta del mateix tipus. Tipus %d.", info.tipus);
+																		missatgeTS(string,$1.rows, $1.columns);
+																	break;
+																	case COMPTIPUS_DIF_RED_PRIMER:
+																		$$.tipus = $1.tipus;
+																		
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		sprintf($$.lexemac3a, "%s %s %s", $1.lexemac3a, obtainCompare("GT", $1.tipus), cast);
+																		
+																		
+																		sprintf(string,"Comprovacio de tipus - Cast pel tipus del primer operand %d.", $1.tipus);
+																		missatgeWarning(string,$1.rows, $1.columns);
+																	break;
+																	case COMPTIPUS_DIF_RED_SEGON:
+																		$$.tipus = $3.tipus;
+																		
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		sprintf($$.lexemac3a, "%s %s %s", cast, obtainCompare("GT", $1.tipus),  $3.lexemac3a);
+																		
+																		
+																		sprintf(string,"Comprovacio de tipus - Cast pel tipus del segon operand %d.", $3.tipus);
+																		missatgeWarning(string,$1.rows, $1.columns);
+																	break;
+																	case COMPTIPUS_DIF_NO_RED:
+																		sprintf(string,"ERROR. Comprovacio de tipus - Tipus incorrectes expressio relacional.");
+																		missatgeError(string,$1.rows, $1.columns);
+																		YYERROR;
+																	break;
+																}
 															}
 														}
 														else{
@@ -968,7 +1061,7 @@ equality_expression : relational_expression 			{sprintf(string,"equality_express
 	
 logical_AND_expression : equality_expression 			{sprintf(string,"logical_AND_expression <- equality_expression ");
 														string_output(string, $<ident>1.rows, $<ident>1.columns);}
-	| logical_AND_expression AND_OP equality_expression {
+	| logical_AND_expression AND_OP m equality_expression {
 														if(($1.tipus != UNDEF)&&($3.tipus != UNDEF)) {
 															if(($1.sizeList != UNDEF)||($3.sizeList != UNDEF)){
 																sprintf(string,"ERROR. Operacio amb tipus Llista.");
@@ -990,7 +1083,7 @@ logical_AND_expression : equality_expression 			{sprintf(string,"logical_AND_exp
 	
 logical_OR_expression : logical_AND_expression  			{sprintf(string,"logical_OR_expression <- logical_AND_expression");
 															string_output(string, $<ident>1.rows, $<ident>1.columns);}
-	| logical_OR_expression OR_OP logical_AND_expression 	{
+	| logical_OR_expression OR_OP m logical_AND_expression 	{
 															if(($1.tipus != UNDEF)&&($3.tipus != UNDEF)) {
 																if(($1.sizeList != UNDEF)||($3.sizeList != UNDEF)){
 																	sprintf(string,"ERROR. Operacio amb tipus Llista.");
@@ -1950,9 +2043,56 @@ expression_statement : ';'  	{sprintf(string,"expression_statement <- ';' ");
 
 	;
 	
-selection_statement : IF '(' expression ')' m statement %prec IF_PREC	{sprintf(string,"selection_statement <- IF '(' expression ')' statement");
+aux_selected_statement : IF '(' expression ')'  {
+													filAux = inicialitzarFil(filAux);
+													sprintf(filAux.info, "IF %s THEN GOTO ", $3.lexemac3a);
+													localC3A = emet(filAux, localC3A);
+													
+												} m {
+														$3.trueList = (int*)malloc(20*sizeof(int));
+														$3.trueList[0] = 3;
+														$3.nTrue = 1;
+														/*------------------------C3A----------------------*/
+														
+														localC3A = completa($3.trueList, $3.nTrue, $6.quad, localC3A);
+														
+													}  statement {
+															
+															$$.nextList = (int*)malloc(20*sizeof(int));
+															$$.nextList = fusiona($$.nextList, $3.falseList, $3.nFalse, $8.nextList, $8.nNext);
+															
+														sprintf(string,"selection_statement <- IF '(' expression ')' statement");
 														string_output(string,$<ident>1.rows,$<ident>1.columns);}
-	| IF '(' expression ')' statement ELSE statement  	{sprintf(string,"selection_statement <- IF '(' expression ')' statement ELSE statement");
+	
+	;
+
+m : {
+		 $$.quad = getSquad();
+	}
+	;
+
+n : {
+		$$.nextList = (int*)malloc(20*sizeof(int));
+		$$.nextList = crearllista($$.nextList, getSquad());
+		
+		filAux = inicialitzarFil(filAux);
+		sprintf(filAux.info, "GOTO ");
+		localC3A = emet(filAux, localC3A);	 
+		
+	}
+	;
+	
+selection_statement : aux_selected_statement %prec IF_PREC	{
+															
+															
+															sprintf(string,"selection_statement <- aux_selected_statement");
+															string_output(string,$<ident>1.rows,$<ident>1.columns);}
+	| aux_selected_statement ELSE  {
+										
+										
+									} n	m {
+											
+											}	statement  	{sprintf(string,"selection_statement <- IF '(' expression ')' statement ELSE statement");
 														string_output(string,$<ident>1.rows,$<ident>1.columns);}
 	| SWITCH '(' expression ')' statement  				{sprintf(string,"selection_statement <- SWITCH '(' expression ')' statement");
 														string_output(string,$<ident>1.rows,$<ident>1.columns);}

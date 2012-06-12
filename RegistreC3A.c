@@ -163,3 +163,67 @@ char* signChange(int tipus){
    
    return change;
 }
+
+char* obtainCompare(char *op, int tipus){
+
+       char *comp = (char*)malloc(sizeof(char)*3);
+       char t1;
+     
+	   if(tipus==ID_CHAR)t1='C';  
+	   else if(tipus==ID_SHORT)t1='S';
+	   else if(tipus==ID_INT)t1='I';
+	   else if(tipus==ID_LONG)t1='L';
+	   else if(tipus==ID_FLOAT)t1='F';
+	   else if(tipus==ID_DOUBLE)t1='D';
+       
+       if(strcmp (op,"GT") == 0){
+               sprintf(comp,"GT%c",t1);
+       }else if(strcmp (op,"GE") == 0){
+               sprintf(comp,"GE%c",t1);
+       }else if(strcmp (op,"LT") == 0){
+               sprintf(comp,"LT%c",t1);
+       }else if(strcmp (op,"LE") == 0){
+               sprintf(comp,"LE%c",t1);
+       }else if(strcmp (op,"EQ") == 0){
+               sprintf(comp,"EQ");
+       }else if(strcmp (op,"NE") == 0){
+               sprintf(comp,"NE");
+       }
+               
+       return comp;
+}
+
+registre completa(int* llista, int midaLlista, int valor, registre taula){
+	int i = 0;
+	char* aux = (char*)malloc(sizeof(char)*100);
+	
+	for(i=0; i<midaLlista; i++){
+		sprintf(aux, "%s%d", taula.taula[llista[i]-1].info, valor);
+		sprintf(taula.taula[llista[i]-1].info, "%s", aux);
+	}
+	
+	return taula;
+}
+
+int* fusiona(int* newList, int* list1, int nList1, int* list2, int nList2){
+	int nNewList=0;
+	int i=0;
+	
+	for(i=0;i<nList1;i++){
+	       newList[i] = list1[i];
+	
+	}
+	
+	nNewList = nList1;
+	for(i=0;i<nList2;i++){
+	       newList[nNewList] = list2[i];
+	       nNewList++;
+	}
+	       
+	return newList;          
+}
+
+int* crearllista(int* newList, int value){
+	newList[0] = value;
+	return newList;
+}

@@ -1,14 +1,8 @@
-
-void ppp(int c, int b){
-
-	
-}
-
 main(){
-	
-	ppp(2+2, 3+1);
-	
-	
+	int a;
+	if (0){
+		a*2;
+	}
 }
 
 

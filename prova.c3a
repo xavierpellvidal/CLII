@@ -1,10 +1,5 @@
-1 - START ppp 
-
-2 - START main 
-3 - $t1 := 2 ADDI 2
-4 - $t2 := 3 ADDI 1
-5 - PARAM $t1
-6 - PARAM $t2
-7 - CALL ppp, 2
+1 - START main 
+2 - IF 0 THEN GOTO 
+3 - $t1 := a MULI 2
 
 

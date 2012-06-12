@@ -99,11 +99,11 @@ typedef union YYSTYPE
 		int rows;
 		int columns;
 		int tipus;
-		int trueList[10];
+		int* trueList;
 		int nTrue;
-		int falseList[10];
+		int* falseList;
 		int nFalse;
-		int nextList[10];
+		int* nextList;
 		int nNext;
 		int quad;
 		int valor;

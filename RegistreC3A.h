@@ -22,3 +22,7 @@ char* obtainCast(int, int, int);
 char* obtainOp(char*, int);
 char* signChange(int);
 int getSquad();
+char* obtainCompare(char *, int);
+registre completa(int*, int, int, registre);
+int* fusiona(int*, int*, int, int*, int);
+int* crearllista(int*, int);
