@@ -932,7 +932,6 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 																		/*-----------------C3A------------------*/
 																		sprintf($$.lexemac3a, "%s %s %s", $1.lexemac3a, obtainCompare("GT", $1.tipus), $3.lexemac3a);
 																		
-																		
 																		sprintf(string,"Operacio correcta del mateix tipus. Tipus %d.", info.tipus);
 																		missatgeTS(string,$1.rows, $1.columns);
 																	break;
@@ -990,6 +989,49 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 															}
 															else {
 																$$.tipus = ID_INT;
+																
+																int comprovacio = 0;
+																comprovacio = comprovacioTipus($1.tipus, $3.tipus);
+																switch (comprovacio) {
+																	case COMPTIPUS_IGUALS:
+																		$$.tipus = $1.tipus;
+																		
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s %s", cast, ":=", $1.lexemac3a, obtainCompare("LE", $1.tipus), $3.lexemac3a);
+																		
+																	break;
+																	case COMPTIPUS_DIF_RED_PRIMER:
+																		$$.tipus = $1.tipus;
+																	
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		sprintf($$.lexemac3a, "%s %s %s", $1.lexemac3a, obtainCompare("LE", $1.tipus), cast);
+																		
+																	break;
+																	case COMPTIPUS_DIF_RED_SEGON:
+																		$$.tipus = $3.tipus;
+																		
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		sprintf($$.lexemac3a, "%s %s %s", cast, obtainCompare("LE", $1.tipus),  $3.lexemac3a);
+																		
+																	break;
+																	case COMPTIPUS_DIF_NO_RED:
+																		sprintf(string,"ERROR. Comprovacio de tipus - Tipus incorrectes expressio relacional.");
+																		missatgeError(string,$1.rows, $1.columns);
+																		YYERROR;
+																	break;
+																}
 															}
 														}
 														else{
@@ -1006,8 +1048,51 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 																missatgeError(string,$1.rows, $1.columns);
 																YYERROR;
 															}
-															else {
+															else{
 																$$.tipus = ID_INT;
+																
+																int comprovacio = 0;
+																comprovacio = comprovacioTipus($1.tipus, $3.tipus);
+																switch (comprovacio) {
+																	case COMPTIPUS_IGUALS:
+																		$$.tipus = $1.tipus;
+																		
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s %s", cast, ":=", $1.lexemac3a, obtainCompare("GE", $1.tipus), $3.lexemac3a);
+																		
+																	break;
+																	case COMPTIPUS_DIF_RED_PRIMER:
+																		$$.tipus = $1.tipus;
+																	
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		sprintf($$.lexemac3a, "%s %s %s", $1.lexemac3a, obtainCompare("GE", $1.tipus), cast);
+																		
+																	break;
+																	case COMPTIPUS_DIF_RED_SEGON:
+																		$$.tipus = $3.tipus;
+																		
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		sprintf($$.lexemac3a, "%s %s %s", cast, obtainCompare("GE", $1.tipus),  $3.lexemac3a);
+																		
+																	break;
+																	case COMPTIPUS_DIF_NO_RED:
+																		sprintf(string,"ERROR. Comprovacio de tipus - Tipus incorrectes expressio relacional.");
+																		missatgeError(string,$1.rows, $1.columns);
+																		YYERROR;
+																	break;
+																}
 															}
 														}
 														else{
@@ -1028,8 +1113,51 @@ equality_expression : relational_expression 			{sprintf(string,"equality_express
 																missatgeError(string,$1.rows, $1.columns);
 																YYERROR;
 															}
-															else {
+															else{
 																$$.tipus = ID_INT;
+																
+																int comprovacio = 0;
+																comprovacio = comprovacioTipus($1.tipus, $3.tipus);
+																switch (comprovacio) {
+																	case COMPTIPUS_IGUALS:
+																		$$.tipus = $1.tipus;
+																		
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s %s", cast, ":=", $1.lexemac3a, obtainCompare("EQ", $1.tipus), $3.lexemac3a);
+																		
+																	break;
+																	case COMPTIPUS_DIF_RED_PRIMER:
+																		$$.tipus = $1.tipus;
+																	
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		sprintf($$.lexemac3a, "%s %s %s", $1.lexemac3a, obtainCompare("EQ", $1.tipus), cast);
+																		
+																	break;
+																	case COMPTIPUS_DIF_RED_SEGON:
+																		$$.tipus = $3.tipus;
+																		
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		sprintf($$.lexemac3a, "%s %s %s", cast, obtainCompare("EQ", $1.tipus),  $3.lexemac3a);
+																		
+																	break;
+																	case COMPTIPUS_DIF_NO_RED:
+																		sprintf(string,"ERROR. Comprovacio de tipus - Tipus incorrectes expressio relacional.");
+																		missatgeError(string,$1.rows, $1.columns);
+																		YYERROR;
+																	break;
+																}
 															}
 														}
 														else{
@@ -1046,8 +1174,51 @@ equality_expression : relational_expression 			{sprintf(string,"equality_express
 																missatgeError(string,$1.rows, $1.columns);
 																YYERROR;
 															}
-															else {
+															else{
 																$$.tipus = ID_INT;
+																
+																int comprovacio = 0;
+																comprovacio = comprovacioTipus($1.tipus, $3.tipus);
+																switch (comprovacio) {
+																	case COMPTIPUS_IGUALS:
+																		$$.tipus = $1.tipus;
+																		
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s %s", cast, ":=", $1.lexemac3a, obtainCompare("NE", $1.tipus), $3.lexemac3a);
+																		
+																	break;
+																	case COMPTIPUS_DIF_RED_PRIMER:
+																		$$.tipus = $1.tipus;
+																	
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		sprintf($$.lexemac3a, "%s %s %s", $1.lexemac3a, obtainCompare("NE", $1.tipus), cast);
+																		
+																	break;
+																	case COMPTIPUS_DIF_RED_SEGON:
+																		$$.tipus = $3.tipus;
+																		
+																		/*-----------------C3A------------------*/
+																		cast = nouTemp();
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		sprintf($$.lexemac3a, "%s %s %s", cast, obtainCompare("NE", $1.tipus),  $3.lexemac3a);
+																		
+																	break;
+																	case COMPTIPUS_DIF_NO_RED:
+																		sprintf(string,"ERROR. Comprovacio de tipus - Tipus incorrectes expressio relacional.");
+																		missatgeError(string,$1.rows, $1.columns);
+																		YYERROR;
+																	break;
+																}
 															}
 														}
 														else{
