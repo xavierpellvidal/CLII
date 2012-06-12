@@ -120,7 +120,7 @@ sym_value_type info, infoAux;
 %type<ident> multiplicative_expression assignment_expression unary_expression assignment_operator cast_expression initializer_list m n
 %type<ident> relational_expression equality_expression logical_OR_expression logical_AND_expression translation_unit typedef_name error
 %type<ident> declaration_list declaration parameter_declaration conditional_expression constant_expression type_name specifier_qualifier_list statement
-%type<ident> aux_selected_statement unary_operator
+%type<ident> unary_operator selection_statement
  
 
 %right<ident>'='
@@ -2552,26 +2552,6 @@ expression_statement : ';'  	{sprintf(string,"expression_statement <- ';' ");
 								string_output(string,$<ident>1.rows,$<ident>1.columns);}
 	| expression ';' 			{sprintf(string,"expression_statement <- expression ';' ");
 								string_output(string,$<ident>1.rows,$<ident>1.columns);}
-
-	;
-	
-aux_selected_statement : IF '(' expression ')' m {
-														/*------------------------C3A----------------------*/
-														
-														localC3A = completa($3.trueList, $3.nTrue, $5.quad, localC3A);
-														
-													}  statement m {
-															
-															$$.nextList = (int*)malloc(20*sizeof(int));
-															$$.nextList = fusiona($$.nextList, $3.falseList, $3.nFalse, $7.nextList, $7.nNext);
-															
-															$$.nNext = $3.nFalse + $7.nNext;
-															
-															localC3A = completa($3.falseList, $3.nFalse, $8.quad, localC3A);
-															
-														sprintf(string,"selection_statement <- IF '(' expression ')' statement");
-														string_output(string,$<ident>1.rows,$<ident>1.columns);}
-	
 	;
 
 m : {
@@ -2582,6 +2562,7 @@ m : {
 n : {
 		$$.nextList = (int*)malloc(20*sizeof(int));
 		$$.nextList = crearllista($$.nextList, getSquad());
+		$$.nNext++;
 		
 		filAux = inicialitzarFil(filAux);
 		sprintf(filAux.info, "GOTO ");
@@ -2589,17 +2570,40 @@ n : {
 	}
 	;
 	
-selection_statement : aux_selected_statement %prec IF_PREC	{
+selection_statement : IF '(' expression ')' m  statement m %prec IF_PREC	{
 															
+															/*------------------------C3A----------------------*/
+															localC3A = completa($3.trueList, $3.nTrue, $5.quad, localC3A);
+															
+															$$.nextList = (int*)malloc(20*sizeof(int));
+															$$.nextList = fusiona($$.nextList, $3.falseList, $3.nFalse, $6.nextList, $6.nNext);
+															
+															$$.nNext = $3.nFalse + $7.nNext;
+															
+															localC3A = completa($3.falseList, $3.nFalse, $7.quad, localC3A);
 															
 															sprintf(string,"selection_statement <- aux_selected_statement");
 															string_output(string,$<ident>1.rows,$<ident>1.columns);}
-	| aux_selected_statement ELSE  {
-										
-										
-									} n	m {
-											
-											}	statement  	{sprintf(string,"selection_statement <- IF '(' expression ')' statement ELSE statement");
+	| IF '(' expression ')' m  statement m ELSE  n  m  statement m 	{
+														
+														/*------------------------C3A----------------------*/
+														localC3A = completa($3.trueList, $3.nTrue, $5.quad, localC3A);
+														localC3A = completa($3.falseList, $3.nTrue, $10.quad, localC3A);
+														
+														$$.nextList = (int *)malloc(sizeof(int)*20);
+														
+														/* utilitzada per a llista auxiliar per als dos fusiona*/
+														$2.nextList = (int *)malloc(sizeof(int)*20);
+														
+														$2.nextList = fusiona($2.nextList, $9.nextList, $9.nNext, $11.nextList, $11.nNext);
+														$2.nNext = $9.nNext + $11.nNext;
+														
+														$$.nextList = fusiona($$.nextList, $6.nextList, $6.nNext, $2.nextList, $2.nNext);
+														$$.nNext = $6.nNext + $2.nNext;
+														
+														localC3A = completa($9.nextList, $9.nNext, $12.quad, localC3A);
+														
+														sprintf(string,"selection_statement <- IF '(' expression ')' statement ELSE statement");
 														string_output(string,$<ident>1.rows,$<ident>1.columns);}
 	| SWITCH '(' expression ')' statement  				{sprintf(string,"selection_statement <- SWITCH '(' expression ')' statement");
 														string_output(string,$<ident>1.rows,$<ident>1.columns);}

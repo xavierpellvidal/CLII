@@ -4,7 +4,7 @@ void main(){
 	if(a<b){
 		a = b*3;
 	} else {
-		b = a * 2;
+		b = a * 3;
 	}
 }
 
