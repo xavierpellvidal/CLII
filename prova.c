@@ -1,7 +1,10 @@
-main(){
-	int a;
-	if (9 > 5){
-		a*2;
+void main(){
+	int a, b;
+	
+	if(a<b){
+		a = b*3;
+	} else {
+		b = a * 2;
 	}
 }
 

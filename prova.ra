@@ -1,7 +1,7 @@
 Funcio main:
 Variables locals de la funció: 
-	Nom: return				 Mida: -1	 Offset: 0	 
-	Nom: a				 Mida: 4	 Offset: -1	 
+	Nom: a				 Mida: 4	 Offset: 0	 
+	Nom: b				 Mida: 4	 Offset: 4	 
 ------------------------------------------------ 
 Taula global:
 Variables locals de la funció: 

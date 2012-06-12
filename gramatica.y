@@ -41,7 +41,8 @@ char *nom_ambit;
 char *nom_funcio;
 char *punter;
 
-char *cast;
+char *cast;	/*per a guardar expresions de comparacions que necessitem tenir en string*/
+char *castAux; /*per a guardar expresions de comparacions que necessitem tenir en string*/
 char *op;
 
 /*Punter per a afegir cometes simples als caracters*/
@@ -119,7 +120,7 @@ sym_value_type info, infoAux;
 %type<ident> multiplicative_expression assignment_expression unary_expression assignment_operator cast_expression initializer_list m n
 %type<ident> relational_expression equality_expression logical_OR_expression logical_AND_expression translation_unit typedef_name error
 %type<ident> declaration_list declaration parameter_declaration conditional_expression constant_expression type_name specifier_qualifier_list statement
-%type<ident> aux_selected_statement
+%type<ident> aux_selected_statement unary_operator
  
 
 %right<ident>'='
@@ -181,6 +182,10 @@ primary_expression : IDENTIFIER {
 								
 								/*-----------------C3A------------------*/
 								$$.lexemac3a = $2.lexemac3a;
+								$$.trueList = $2.trueList;
+								$$.nTrue = $2.nTrue;
+								$$.falseList = $2.falseList;
+								$$.nFalse = $2.nFalse;
 								
 								sprintf(string,"primary_expression <- (expression) ");
 								string_output(string, $<ident>1.rows, $<ident>1.columns);}
@@ -421,11 +426,22 @@ unary_expression : postfix_expression 	{
 										string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	| unary_operator cast_expression 	{
 										if ($2.tipus != ID_CHAR){
-											/*-----------------C3A------------------*/
-											$$.lexemac3a = nouTemp();
-											filAux = inicialitzarFil(filAux);
-											sprintf(filAux.info, "%s %s %s %s", $$.lexemac3a, ":=", signChange($2.tipus), $2.lexemac3a);
-											localC3A = emet(filAux, localC3A);
+											$$.tipus = $2.tipus;
+											
+											if ( $1.lexema[0] == '-' ){
+												/*-----------------C3A------------------*/
+												$$.lexemac3a = nouTemp();
+												filAux = inicialitzarFil(filAux);
+												sprintf(filAux.info, "%s %s %s %s", $$.lexemac3a, ":=", signChange($2.tipus), $2.lexemac3a);
+												localC3A = emet(filAux, localC3A);
+											} else if  ( $1.lexema[0] == '!' ){
+												$$.trueList = $2.falseList;
+												$$.nTrue = $2.nFalse;
+												$$.falseList = $2.trueList;
+												$$.nFalse = $2.nTrue;
+											}
+											
+											
 										}
 										sprintf(string,"unary_expression <- unary_operator cast_expression ");
 										string_output(string, $<ident>1.rows, $<ident>1.columns);}
@@ -868,9 +884,27 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 																		$$.tipus = $1.tipus;
 																		
 																		/*-----------------C3A------------------*/
-																		cast = nouTemp();
+																		
 																		filAux = inicialitzarFil(filAux);
-																		sprintf(filAux.info, "%s %s %s %s %s", cast, ":=", $1.lexemac3a, obtainCompare("LT", $1.tipus), $3.lexemac3a);
+																		
+																		sprintf(cast, "%s %s %s", $1.lexemac3a, obtainCompare("LT", $1.tipus), $3.lexemac3a);
+																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
+																		
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", cast);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																		
 																	break;
 																	case COMPTIPUS_DIF_RED_PRIMER:
@@ -882,7 +916,24 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
 																		localC3A = emet(filAux, localC3A);
 																		
-																		sprintf($$.lexemac3a, "%s %s %s", $1.lexemac3a, obtainCompare("LT", $1.tipus), cast);
+																		sprintf(castAux, "%s %s %s", $1.lexemac3a, obtainCompare("LT", $1.tipus), cast);
+																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
+																		
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", castAux);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																		
 																	break;
 																	case COMPTIPUS_DIF_RED_SEGON:
@@ -894,7 +945,24 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
 																		localC3A = emet(filAux, localC3A);
 																		
-																		sprintf($$.lexemac3a, "%s %s %s", cast, obtainCompare("GT", $1.tipus),  $3.lexemac3a);
+																		sprintf(castAux, "%s %s %s", cast, obtainCompare("LT", $1.tipus),  $3.lexemac3a);
+																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
+																		
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", castAux);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																		
 																	break;
 																	case COMPTIPUS_DIF_NO_RED:
@@ -930,7 +998,27 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 																		$$.tipus = $1.tipus;
 																		
 																		/*-----------------C3A------------------*/
-																		sprintf($$.lexemac3a, "%s %s %s", $1.lexemac3a, obtainCompare("GT", $1.tipus), $3.lexemac3a);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		
+																		sprintf(cast, "%s %s %s", $1.lexemac3a, obtainCompare("GT", $1.tipus), $3.lexemac3a);
+																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
+																		
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", cast);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																		
 																		sprintf(string,"Operacio correcta del mateix tipus. Tipus %d.", info.tipus);
 																		missatgeTS(string,$1.rows, $1.columns);
@@ -944,11 +1032,24 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
 																		localC3A = emet(filAux, localC3A);
 																		
-																		sprintf($$.lexemac3a, "%s %s %s", $1.lexemac3a, obtainCompare("GT", $1.tipus), cast);
+																		sprintf(castAux, "%s %s %s", $1.lexemac3a, obtainCompare("GT", $1.tipus), cast);
 																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
 																		
-																		sprintf(string,"Comprovacio de tipus - Cast pel tipus del primer operand %d.", $1.tipus);
-																		missatgeWarning(string,$1.rows, $1.columns);
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", castAux);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																	break;
 																	case COMPTIPUS_DIF_RED_SEGON:
 																		$$.tipus = $3.tipus;
@@ -959,11 +1060,24 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
 																		localC3A = emet(filAux, localC3A);
 																		
-																		sprintf($$.lexemac3a, "%s %s %s", cast, obtainCompare("GT", $1.tipus),  $3.lexemac3a);
+																		sprintf(castAux, "%s %s %s", cast, obtainCompare("GT", $1.tipus),  $3.lexemac3a);
 																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
 																		
-																		sprintf(string,"Comprovacio de tipus - Cast pel tipus del segon operand %d.", $3.tipus);
-																		missatgeWarning(string,$1.rows, $1.columns);
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", castAux);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																	break;
 																	case COMPTIPUS_DIF_NO_RED:
 																		sprintf(string,"ERROR. Comprovacio de tipus - Tipus incorrectes expressio relacional.");
@@ -997,9 +1111,27 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 																		$$.tipus = $1.tipus;
 																		
 																		/*-----------------C3A------------------*/
-																		cast = nouTemp();
+																		
 																		filAux = inicialitzarFil(filAux);
-																		sprintf(filAux.info, "%s %s %s %s %s", cast, ":=", $1.lexemac3a, obtainCompare("LE", $1.tipus), $3.lexemac3a);
+																		
+																		sprintf(cast, "%s %s %s", $1.lexemac3a, obtainCompare("LE", $1.tipus), $3.lexemac3a);
+																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
+																		
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", cast);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																		
 																	break;
 																	case COMPTIPUS_DIF_RED_PRIMER:
@@ -1011,7 +1143,24 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
 																		localC3A = emet(filAux, localC3A);
 																		
-																		sprintf($$.lexemac3a, "%s %s %s", $1.lexemac3a, obtainCompare("LE", $1.tipus), cast);
+																		sprintf(castAux, "%s %s %s", $1.lexemac3a, obtainCompare("LE", $1.tipus), cast);
+																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
+																		
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", castAux);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																		
 																	break;
 																	case COMPTIPUS_DIF_RED_SEGON:
@@ -1023,7 +1172,24 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
 																		localC3A = emet(filAux, localC3A);
 																		
-																		sprintf($$.lexemac3a, "%s %s %s", cast, obtainCompare("LE", $1.tipus),  $3.lexemac3a);
+																		sprintf(castAux, "%s %s %s", cast, obtainCompare("LE", $1.tipus),  $3.lexemac3a);
+																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
+																		
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", castAux);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																		
 																	break;
 																	case COMPTIPUS_DIF_NO_RED:
@@ -1058,9 +1224,27 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 																		$$.tipus = $1.tipus;
 																		
 																		/*-----------------C3A------------------*/
-																		cast = nouTemp();
+																		
 																		filAux = inicialitzarFil(filAux);
-																		sprintf(filAux.info, "%s %s %s %s %s", cast, ":=", $1.lexemac3a, obtainCompare("GE", $1.tipus), $3.lexemac3a);
+																		
+																		sprintf(cast, "%s %s %s", $1.lexemac3a, obtainCompare("GE", $1.tipus), $3.lexemac3a);
+																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
+																		
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", cast);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																		
 																	break;
 																	case COMPTIPUS_DIF_RED_PRIMER:
@@ -1072,7 +1256,24 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
 																		localC3A = emet(filAux, localC3A);
 																		
-																		sprintf($$.lexemac3a, "%s %s %s", $1.lexemac3a, obtainCompare("GE", $1.tipus), cast);
+																		sprintf(castAux, "%s %s %s", $1.lexemac3a, obtainCompare("GE", $1.tipus), cast);
+																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
+																		
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", castAux);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																		
 																	break;
 																	case COMPTIPUS_DIF_RED_SEGON:
@@ -1084,7 +1285,24 @@ relational_expression : additive_expression 			{sprintf(string,"relational_expre
 																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
 																		localC3A = emet(filAux, localC3A);
 																		
-																		sprintf($$.lexemac3a, "%s %s %s", cast, obtainCompare("GE", $1.tipus),  $3.lexemac3a);
+																		sprintf(castAux, "%s %s %s", cast, obtainCompare("GE", $1.tipus),  $3.lexemac3a);
+																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
+																		
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", castAux);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																		
 																	break;
 																	case COMPTIPUS_DIF_NO_RED:
@@ -1123,9 +1341,27 @@ equality_expression : relational_expression 			{sprintf(string,"equality_express
 																		$$.tipus = $1.tipus;
 																		
 																		/*-----------------C3A------------------*/
-																		cast = nouTemp();
+																		
 																		filAux = inicialitzarFil(filAux);
-																		sprintf(filAux.info, "%s %s %s %s %s", cast, ":=", $1.lexemac3a, obtainCompare("EQ", $1.tipus), $3.lexemac3a);
+																		
+																		sprintf(cast, "%s %s %s", $1.lexemac3a, obtainCompare("EQ", $1.tipus), $3.lexemac3a);
+																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
+																		
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", cast);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																		
 																	break;
 																	case COMPTIPUS_DIF_RED_PRIMER:
@@ -1137,7 +1373,24 @@ equality_expression : relational_expression 			{sprintf(string,"equality_express
 																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
 																		localC3A = emet(filAux, localC3A);
 																		
-																		sprintf($$.lexemac3a, "%s %s %s", $1.lexemac3a, obtainCompare("EQ", $1.tipus), cast);
+																		sprintf(castAux, "%s %s %s", $1.lexemac3a, obtainCompare("EQ", $1.tipus), cast);
+																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
+																		
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", castAux);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																		
 																	break;
 																	case COMPTIPUS_DIF_RED_SEGON:
@@ -1149,7 +1402,24 @@ equality_expression : relational_expression 			{sprintf(string,"equality_express
 																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
 																		localC3A = emet(filAux, localC3A);
 																		
-																		sprintf($$.lexemac3a, "%s %s %s", cast, obtainCompare("EQ", $1.tipus),  $3.lexemac3a);
+																		sprintf(castAux, "%s %s %s", cast, obtainCompare("EQ", $1.tipus),  $3.lexemac3a);
+																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
+																		
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", castAux);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																		
 																	break;
 																	case COMPTIPUS_DIF_NO_RED:
@@ -1184,9 +1454,27 @@ equality_expression : relational_expression 			{sprintf(string,"equality_express
 																		$$.tipus = $1.tipus;
 																		
 																		/*-----------------C3A------------------*/
-																		cast = nouTemp();
+																		
 																		filAux = inicialitzarFil(filAux);
-																		sprintf(filAux.info, "%s %s %s %s %s", cast, ":=", $1.lexemac3a, obtainCompare("NE", $1.tipus), $3.lexemac3a);
+																		
+																		sprintf(cast, "%s %s %s", $1.lexemac3a, obtainCompare("NE", $1.tipus), $3.lexemac3a);
+																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
+																		
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", cast);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																		
 																	break;
 																	case COMPTIPUS_DIF_RED_PRIMER:
@@ -1198,7 +1486,24 @@ equality_expression : relational_expression 			{sprintf(string,"equality_express
 																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_PRIMER), $3.lexemac3a);
 																		localC3A = emet(filAux, localC3A);
 																		
-																		sprintf($$.lexemac3a, "%s %s %s", $1.lexemac3a, obtainCompare("NE", $1.tipus), cast);
+																		sprintf(castAux, "%s %s %s", $1.lexemac3a, obtainCompare("NE", $1.tipus), cast);
+																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
+																		
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", castAux);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																		
 																	break;
 																	case COMPTIPUS_DIF_RED_SEGON:
@@ -1210,7 +1515,24 @@ equality_expression : relational_expression 			{sprintf(string,"equality_express
 																		sprintf(filAux.info, "%s %s %s %s", cast, ":=", obtainCast($1.tipus, $3.tipus, COMPTIPUS_DIF_RED_SEGON), $1.lexemac3a);
 																		localC3A = emet(filAux, localC3A);
 																		
-																		sprintf($$.lexemac3a, "%s %s %s", cast, obtainCompare("NE", $1.tipus),  $3.lexemac3a);
+																		sprintf(castAux, "%s %s %s", cast, obtainCompare("NE", $1.tipus),  $3.lexemac3a);
+																		
+																		$$.trueList = (int *)malloc(sizeof(int)*20);
+																		$$.falseList = (int *)malloc(sizeof(int)*20);
+																		
+																		$$.trueList = crearllista($$.trueList, getSquad());
+																		$$.falseList = crearllista($$.falseList, getSquad()+1);
+																		
+																		$$.nTrue++;
+																		$$.nFalse++;
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "IF %s GOTO ", castAux);
+																		localC3A = emet(filAux, localC3A);
+																		
+																		filAux = inicialitzarFil(filAux);
+																		sprintf(filAux.info, "GOTO ");
+																		localC3A = emet(filAux, localC3A);
 																		
 																	break;
 																	case COMPTIPUS_DIF_NO_RED:
@@ -1233,14 +1555,24 @@ equality_expression : relational_expression 			{sprintf(string,"equality_express
 logical_AND_expression : equality_expression 			{sprintf(string,"logical_AND_expression <- equality_expression ");
 														string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	| logical_AND_expression AND_OP m equality_expression {
-														if(($1.tipus != UNDEF)&&($3.tipus != UNDEF)) {
-															if(($1.sizeList != UNDEF)||($3.sizeList != UNDEF)){
+														if(($1.tipus != UNDEF)&&($4.tipus != UNDEF)) {
+															if(($1.sizeList != UNDEF)||($4.sizeList != UNDEF)){
 																sprintf(string,"ERROR. Operacio amb tipus Llista.");
 																missatgeError(string,$1.rows, $1.columns);
 																YYERROR;
 															}
 															else {
 																$$.tipus = ID_INT;
+																$$.trueList = (int*)malloc(sizeof(int)*20);
+																$$.falseList = (int*)malloc(sizeof(int)*20);
+																
+																localC3A = completa($1.trueList, $1.nTrue, $3.quad, localC3A);
+																$$.falseList = fusiona($$.falseList, $1.falseList, $1.nFalse, $4.falseList, $4.nFalse);
+																
+																$$.trueList = $4.trueList;
+																$$.nTrue = $4.nTrue;
+																
+																$$.nFalse = $1.nFalse + $4.nFalse;
 															}
 														}
 														else{
@@ -1255,14 +1587,24 @@ logical_AND_expression : equality_expression 			{sprintf(string,"logical_AND_exp
 logical_OR_expression : logical_AND_expression  			{sprintf(string,"logical_OR_expression <- logical_AND_expression");
 															string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	| logical_OR_expression OR_OP m logical_AND_expression 	{
-															if(($1.tipus != UNDEF)&&($3.tipus != UNDEF)) {
-																if(($1.sizeList != UNDEF)||($3.sizeList != UNDEF)){
+															if(($1.tipus != UNDEF)&&($4.tipus != UNDEF)) {
+																if(($1.sizeList != UNDEF)||($4.sizeList != UNDEF)){
 																	sprintf(string,"ERROR. Operacio amb tipus Llista.");
 																	missatgeError(string,$1.rows, $1.columns);
 																	YYERROR;
 																}
 																else {
 																	$$.tipus = ID_INT;
+																	$$.trueList = (int*)malloc(sizeof(int)*20);
+																	$$.falseList = (int*)malloc(sizeof(int)*20);
+																	
+																	localC3A = completa($1.falseList, $1.nFalse, $3.quad, localC3A);
+																	$$.trueList = fusiona($$.trueList, $1.trueList, $1.nTrue, $4.trueList, $4.nTrue);
+																	
+																	$$.falseList = $4.falseList;
+																	$$.nFalse = $4.nFalse;
+																	
+																	$$.nTrue = $1.nTrue + $4.nTrue;
 																}
 															}
 															else{
@@ -1275,7 +1617,6 @@ logical_OR_expression : logical_AND_expression  			{sprintf(string,"logical_OR_e
 	;
 	
 conditional_expression : logical_OR_expression  			{
-															$$ = $1;
 															sprintf(string,"conditional_expression <- logical_OR_expression ");
 															string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	| logical_OR_expression '?' expression ':' conditional_expression	{sprintf(string,"conditional_expression <- logical_OR_expression '?' expression ':' conditional_expression ");
@@ -2214,23 +2555,19 @@ expression_statement : ';'  	{sprintf(string,"expression_statement <- ';' ");
 
 	;
 	
-aux_selected_statement : IF '(' expression ')'  {
-													filAux = inicialitzarFil(filAux);
-													sprintf(filAux.info, "IF %s THEN GOTO ", $3.lexemac3a);
-													localC3A = emet(filAux, localC3A);
-													
-												} m {
-														$3.trueList = (int*)malloc(20*sizeof(int));
-														$3.trueList[0] = 3;
-														$3.nTrue = 1;
+aux_selected_statement : IF '(' expression ')' m {
 														/*------------------------C3A----------------------*/
 														
-														localC3A = completa($3.trueList, $3.nTrue, $6.quad, localC3A);
+														localC3A = completa($3.trueList, $3.nTrue, $5.quad, localC3A);
 														
-													}  statement {
+													}  statement m {
 															
 															$$.nextList = (int*)malloc(20*sizeof(int));
-															$$.nextList = fusiona($$.nextList, $3.falseList, $3.nFalse, $8.nextList, $8.nNext);
+															$$.nextList = fusiona($$.nextList, $3.falseList, $3.nFalse, $7.nextList, $7.nNext);
+															
+															$$.nNext = $3.nFalse + $7.nNext;
+															
+															localC3A = completa($3.falseList, $3.nFalse, $8.quad, localC3A);
 															
 														sprintf(string,"selection_statement <- IF '(' expression ')' statement");
 														string_output(string,$<ident>1.rows,$<ident>1.columns);}
@@ -2249,7 +2586,6 @@ n : {
 		filAux = inicialitzarFil(filAux);
 		sprintf(filAux.info, "GOTO ");
 		localC3A = emet(filAux, localC3A);	 
-		
 	}
 	;
 	
@@ -2637,6 +2973,7 @@ int init_analisi_sintactic(char* filename){
 	inicialitzarFit(filename);
 	
 	cast = (char *)malloc(20*sizeof(char));
+	castAux = (char *)malloc(20*sizeof(char));
 	op = (char *)malloc(5*sizeof(char));
 	aux = (char *)malloc(20*sizeof(char));
 	

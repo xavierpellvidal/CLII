@@ -1,5 +1,11 @@
 1 - START main 
-2 - IF 0 THEN GOTO 
-3 - $t1 := a MULI 2
+2 - IF a LTI b GOTO 8
+3 - GOTO 4
+4 - IF b LTI a GOTO 6
+5 - GOTO 10
+6 - IF b GTI a GOTO 8
+7 - GOTO 10
+8 - $t1 := b MULI 3
+9 - a := $t1
 
 
