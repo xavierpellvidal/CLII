@@ -120,7 +120,7 @@ sym_value_type info, infoAux;
 %type<ident> multiplicative_expression assignment_expression unary_expression assignment_operator cast_expression initializer_list m n
 %type<ident> relational_expression equality_expression logical_OR_expression logical_AND_expression translation_unit typedef_name error
 %type<ident> declaration_list declaration parameter_declaration conditional_expression constant_expression type_name specifier_qualifier_list statement
-%type<ident> unary_operator selection_statement
+%type<ident> unary_operator selection_statement iteration_statement s p q
  
 
 %right<ident>'='
@@ -2473,9 +2473,9 @@ labeled_statement : CASE constant_expression ':' statement 	{sprintf(string,"lab
 	
 compound_statement : '{' { 
 							if(isReturn == 0){
-						  	/* buscar el nom de la funcio i mirar el tipus, si no es void return warning */
-						  	inicialitzarInfo();
-					
+							/* buscar el nom de la funcio i mirar el tipus, si no es void return warning */
+							inicialitzarInfo();
+							
 							ambit_actual=sym_get_scope();
 							error_sym=sym_global_lookup(nom_funcio,&info);
 							
@@ -2609,13 +2609,85 @@ selection_statement : IF '(' expression ')' m  statement m %prec IF_PREC	{
 														string_output(string,$<ident>1.rows,$<ident>1.columns);}
 	;
 	
+q : m '(' expression ';' {
+								filAux = inicialitzarFil(filAux);
+								sprintf(filAux.info, "%s", $3.lexemac3a);
+								localC3A = emet(filAux, localC3A);	 
+								
+								$$.lexemac3a = $3.lexemac3a;
+								
+								sprintf(string,"q <- FOR m '(' expression ';' ");
+								string_output(string,$<ident>1.rows,$<ident>1.columns);
+							}
+	;	
 	
-iteration_statement : WHILE '(' expression ')' statement 	{sprintf(string,"iteration_statement <- WHILE '(' expression ')' statement");
+p : q expression ';' {
+						$$.lexemac3a = $1.lexemac3a;
+						$$.quad = getSquad();
+						
+						sprintf(cast, "%s %s %s", $1.lexemac3a, obtainCompare("LE", $2.tipus), $2.lexemac3a);
+						
+						filAux = inicialitzarFil(filAux);
+						sprintf(filAux.info, "IF %s GOTO %d", cast, $$.quad + 2);
+						localC3A = emet(filAux, localC3A); 
+						
+						$$.nextList = (int *)malloc(sizeof(int)*20);
+						$$.nextList = crearllista($$.nextList, getSquad());
+						$$.nNext++;
+						
+						filAux = inicialitzarFil(filAux);
+						sprintf(filAux.info, "GOTO ");
+						localC3A = emet(filAux, localC3A);
+						
+						sprintf(string,"p <- q expression ';' ");
+						string_output(string,$<ident>1.rows,$<ident>1.columns);
+					}
+	;
+	
+s : p expression ')' statement 	{
+							
+							localC3A = completa($4.nextList, $4.nNext, getSquad(), localC3A);
+							
+							filAux = inicialitzarFil(filAux);
+							sprintf(filAux.info, "%s := %s + 1", $1.lexemac3a, $1.lexemac3a);
+							localC3A = emet(filAux, localC3A); 
+							
+							filAux = inicialitzarFil(filAux);
+							sprintf(filAux.info, "GOTO %d", $1.quad);
+							localC3A = emet(filAux, localC3A);
+							
+							$$.nextList = $1.nextList;
+							$$.nNext = $1.nNext;
+							
+							sprintf(string,"s <- p expression ')' statement ");
+							string_output(string,$<ident>1.rows,$<ident>1.columns);
+						}
+	;
+	
+iteration_statement : WHILE '(' m expression ')' m statement {
+															
+															localC3A = completa($4.trueList, $4.nTrue, $6.quad, localC3A);
+															localC3A = completa($7.nextList, $4.nNext, $3.quad, localC3A);
+															
+															$$.nextList = $4.falseList;
+															$$.nNext = $4.nFalse;
+															
+															filAux = inicialitzarFil(filAux);
+															sprintf(filAux.info, "GOTO %d", $3.quad);
+															localC3A = emet(filAux, localC3A);	 
+															
+															/* el getQuad apunta a la seguent lina despres del while i no posem m a la regla */
+															/* com a les altres per no haver de partir la regla*/
+															localC3A = completa($4.falseList, $4.nFalse, getSquad(), localC3A);
+															
+															sprintf(string,"iteration_statement <- WHILE '(' expression ')' statement");
 															string_output(string,$<ident>1.rows,$<ident>1.columns);}
 	| DO statement WHILE '(' expression ')' ';' 			{sprintf(string,"iteration_statement <- DO statement WHILE '(' expression ')' ';'");
 															string_output(string,$<ident>1.rows,$<ident>1.columns);}
-	| FOR '(' expression ';' expression ';' expression ')' statement 	{sprintf(string,"iteration_statement <-  FOR '(' expression ';' expression ';' expression ')' statement");
-																		string_output(string,$<ident>1.rows,$<ident>1.columns);}
+	| FOR s 												{sprintf(string,"iteration_statement <- FOR s ");
+															string_output(string,$<ident>1.rows,$<ident>1.columns);
+															}
+		
 	| FOR '(' ';' expression ';' expression ')' statement 	{sprintf(string,"iteration_statement <- FOR '(' ';' expression ';' expression ')' statement ");
 															string_output(string,$<ident>1.rows,$<ident>1.columns);}
 	| FOR '(' ';' ';' expression ')' statement				{sprintf(string,"iteration_statement <- FOR '(' ';' ';' expression ')' statement ");
