@@ -90,7 +90,7 @@ typedef union YYSTYPE
 {
 
 /* Line 1685 of yacc.c  */
-#line 90 "gramatica.y"
+#line 91 "gramatica.y"
 
 	struct{
 		char *lexema;
