@@ -61,7 +61,7 @@ int isFunction = 0;
 int isReturn = 0;
 int isFunctionDeclaration = 0;
 int numParam = 0;
-int i;
+int i, j;
 int isStruct = 0;
 int isFor = 0;
 
@@ -86,6 +86,7 @@ void missatgeError(char *, int row, int col);
 void missatgeWarning(char *, int row, int col);
 int comprovacioTipus(int primer, int segon);
 int obtenirMida(int tipus);
+int obtenirMidaStruct(char * );
 sym_value_type info, infoAux;
 
 %}
@@ -368,27 +369,27 @@ postfix_expression : primary_expression 	{
 															sprintf(string,"postfix_expression <- postfix_expression '(' argument_expression_list ')' ");
 															string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	| postfix_expression '.' IDENTIFIER 	{
-											printf("%s.%s\n",$1.lexema, $3.lexema);
-											
 											nom_id = (char *)malloc(sizeof(char)*20);
 											strcpy(nom_id, $1.lexema);
 											
 											inicialitzarInfo();
 											ambit_actual = sym_get_scope();
+											
 											/*Obtenim la variable creada amb el typedef struct, pero volem el valor per accedir al struct 'melon' i veure les dades*/
-											error_sym=sym_lookup(nom_id,&info);											
+											error_sym=sym_lookup(nom_id,&info);
 											/* Recuperem el struct original 'melon', no el creat*/
 											error_sym=sym_lookup(info.valor,&infoAux);
-											
-											printf("%s %d\n", infoAux.lexema, infoAux.nParamsFuncio);
+											j = 0;
 											
 											for(i=0; i<infoAux.nParamsFuncio; i++){
+												j += obtenirMida(infoAux.parametres[i].type);
 												if (strcmp(infoAux.parametres[i].lexema, $3.lexema) == 0){
 													$$.tipus = infoAux.parametres[i].type;
+													j -= obtenirMida(infoAux.parametres[i].type);
 												}
 											}
 											
-											printf("%d\n", $$.tipus);
+											sprintf($$.lexemac3a, "%s[%d]", nom_id, j);
 											
 											sprintf(string,"postfix_expression <- postfix_expression '.' IDENTIFIER ");
 											string_output(string, $<ident>1.rows, $<ident>1.columns);}
@@ -1810,6 +1811,22 @@ declaration : declaration_specifiers ';' 	{sprintf(string,"declaration <- declar
 															
 															sym_remove(nom_id);
 															sym_add(nom_id,&info);
+															
+															filaAux = inicialitzarFila(filaAux);
+															filaAux.nom = $2.lexema;
+															filaAux.mida = obtenirMidaStruct(info.valor);
+															
+															if (ambit_actual==SYM_ROOT_SCOPE){
+																filaAux.offset = offsetG;
+																offsetG = filaAux.mida + offsetG;
+																globalRA = introduirFila(filaAux, globalRA);
+															}
+															else{
+																filaAux.offset = offsetL;
+																offsetL = filaAux.mida + offsetL;
+																localRA = introduirFila(filaAux, localRA);
+															}
+															
 														}
 														sprintf(string,"declaration <- declaration_specifiers init_declarator_list ;");
 														string_output(string, $<ident>1.rows, $<ident>1.columns);}
@@ -1910,16 +1927,12 @@ init_declarator : declarator 		{
 											sprintf(string,"Modificat el tipus de l'identificador %s amb tipus %d", $1.lexema, info.tipus);
 											missatgeTS(string,$1.rows, $1.columns);
 											
-											
-											
 											filaAux = inicialitzarFila(filaAux);
 											
 											filaAux.nom = $1.lexema;
 											
-											filaAux.mida = obtenirMida(info.tipus);
-											
-											
 											if(info.sizeList > -1){
+												filaAux.mida = obtenirMida(info.tipus);
 												if (ambit_actual==SYM_ROOT_SCOPE){
 													filaAux.offset = offsetG;
 													offsetG = (filaAux.mida * info.sizeList) + offsetG;
@@ -1930,9 +1943,10 @@ init_declarator : declarator 		{
 													offsetL = (filaAux.mida * info.sizeList) + offsetL;
 													localRA = introduirFila(filaAux, localRA);
 												}
-											}else{
+											}else if (info.tipus != ID_STRUCT) {
+												filaAux.mida = obtenirMida(info.tipus);
 												if (ambit_actual==SYM_ROOT_SCOPE){
-											
+													
 													filaAux.offset = offsetG;
 													offsetG += filaAux.mida;
 													globalRA = introduirFila(filaAux, globalRA);
@@ -2088,8 +2102,6 @@ typedef_name : TYPEDEF_IDENTIFIER 	{
 										YYERROR;
 									}
 									
-									printf("Type %d\n", info.nParamsFuncio);
-									
 									sprintf(string,"typedef_name <- TYPEDEF_IDENTIFIER ");
 									string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	;
@@ -2112,9 +2124,6 @@ struct_or_union : STRUCT 	{
 							info.tipusFunction = STRUCT;
 							info.nParamsFuncio = 0;
 							
-							printf("%s \n ", info.lexema);
-							printf("%d \n ", info.nParamsFuncio);
-							
 							sprintf(string,"struct_or_union <- STRUCT ");
 							string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	| UNION 				{sprintf(string,"struct_or_union <- UNION ");
@@ -2133,7 +2142,6 @@ struct_declaration : specifier_qualifier_list struct_declarator_list ';' 	{
 																			info.parametres[info.nParamsFuncio].type = $1.tipus;
 																			info.nParamsFuncio++;
 																			
-																			printf("%d \n", info.nParamsFuncio);
 																			
 																			sprintf(string,"Parametre %s de tipus %d introduit al struct.", $2.lexema, $1.tipus);
 																			missatgeTS(string,$2.rows, $2.columns);
@@ -3340,6 +3348,27 @@ int obtenirMida(int tipus){
 	}
 	return -1;
 }
+
+int obtenirMidaStruct(char * nomStruct){
+	int x = 0;
+	int mida = 0;
+	
+	inicialitzarInfo();
+	ambit_actual=sym_get_scope();
+	if (ambit_actual==SYM_ROOT_SCOPE){
+		error_sym=sym_global_lookup(nomStruct,&info);
+	}
+	else{
+		error_sym=sym_lookup(nomStruct,&info);
+	}
+	
+	for(x=0;x<info.nParamsFuncio; x++){
+		mida += obtenirMida(info.parametres[x].type);
+	}
+	
+	return mida;
+}
+
 
 void yyerror(char *explanation){	
 	fflush(yyout);

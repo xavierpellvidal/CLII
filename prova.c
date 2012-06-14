@@ -7,7 +7,5 @@ typedef struct {
 melon bernat;
 
 void main(){
-	bernat.pepon = 4;
-	bernat.patata = 3;
-	bernat.cafe = 0.2;
+	bernat.cafe = 4;
 }
