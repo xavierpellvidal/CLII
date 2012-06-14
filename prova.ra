@@ -1,8 +1,5 @@
-Funcio main:
-Variables locals de la funció: 
-	Nom: a				 Mida: 4	 Offset: 0	 
-	Nom: b				 Mida: 4	 Offset: 4	 
------------------------------------------------- 
 Taula global:
 Variables locals de la funció: 
+	Nom: bernat				 Mida: -1	 Offset: 0	 
+	Nom: pepon				 Mida: 4	 Offset: -1	 
 ------------------------------------------------ 

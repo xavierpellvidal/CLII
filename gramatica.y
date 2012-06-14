@@ -28,6 +28,7 @@ veure facilment qui te mes o menys precisio.*/
 #define UNDEF -1
 #define FUNCTION 10
 #define ID_TYPEDEF 11
+#define ID_STRUCT 12
 
 #define LOCAL 0
 #define GLOBAL -1
@@ -55,6 +56,7 @@ int offsetL = 0;
 int offsetG = 0;
 
 int tipus_declaracio = UNDEF;
+
 int isFunction = 0;
 int isReturn = 0;
 int isFunctionDeclaration = 0;
@@ -1769,6 +1771,23 @@ declaration : declaration_specifiers ';' 	{sprintf(string,"declaration <- declar
 															sym_remove(nom_funcio);
 															sym_add(nom_funcio,&info);
 														}
+														if (tipus_declaracio == ID_STRUCT){
+															inicialitzarInfo();
+															ambit_actual=sym_get_scope();
+															if (ambit_actual==SYM_ROOT_SCOPE){
+																error_sym=sym_global_lookup(nom_id,&info);
+															}
+															else{
+																error_sym=sym_lookup(nom_id,&info);
+															}
+															sprintf(string,"Guardat el tipus d'struct de %s amb %s",$2.lexema, $1.lexema);
+															missatgeTS(string,$1.rows, $1.columns);
+															
+															strcpy(info.valor, $1.lexema);
+															
+															sym_remove(nom_id);
+															sym_add(nom_id,&info);
+														}
 														sprintf(string,"declaration <- declaration_specifiers init_declarator_list ;");
 														string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	| TYPEDEF declaration_specifiers declarator ';' 	{
@@ -1804,6 +1823,22 @@ declaration : declaration_specifiers ';' 	{sprintf(string,"declaration <- declar
 															}
 														} 
 														else{
+															
+															strcpy(info.lexema, $3.lexema);
+															info.tipus = ID_TYPEDEF;
+															info.tipusTypedef = ID_STRUCT;
+															
+															ambit_actual = sym_get_scope();
+															if (ambit_actual==SYM_ROOT_SCOPE){
+																error_sym=sym_global_add(nom_id,&info);
+															}
+															else{
+																error_sym=sym_add(nom_id,&info);
+															}
+															
+															sprintf(string,"TYPEDEF %s introduit a la TS com a STRUCT.", info.lexema);
+															missatgeTS(string,$1.rows, $1.columns);
+															
 															isStruct = 0;
 														}
 														sprintf(string,"declaration <- TYPEDEF declaration_specifiers declarator ;");
@@ -1846,6 +1881,7 @@ init_declarator : declarator 		{
 										missatgeTS(string,$1.rows, $1.columns);
 										if(info.tipus == UNDEF){
 											info.tipus = tipus_declaracio;
+											
 											sym_remove(nom_id);
 											sym_add(nom_id,&info);
 											sprintf(string,"Modificat el tipus de l'identificador %s amb tipus %d", $1.lexema, info.tipus);
@@ -2008,8 +2044,8 @@ type_specifier : VOID 	{
 typedef_name : TYPEDEF_IDENTIFIER 	{
 									inicialitzarInfo();
 									
-									
 									ambit_actual=sym_get_scope();
+									
 									if (ambit_actual==SYM_ROOT_SCOPE){
 										error_sym=sym_global_lookup($1.lexema,&info);
 									}
@@ -2036,15 +2072,26 @@ typedef_name : TYPEDEF_IDENTIFIER 	{
 struct_or_union_specifier : struct_or_union  IDENTIFIER  '{' struct_declaration_list '}' 	{
 																						sprintf(string,"struct_or_union_specifier <- struct_or_union IDENTIFIER '{' struct_declaration_list '}'");
 																						string_output(string, $<ident>1.rows, $<ident>1.columns);}
-	| struct_or_union '{' struct_declaration_list '}' 									{sprintf(string,"struct_or_union_specifier <- struct_or_union '{' struct_declaration_list '}' ");
+	| struct_or_union '{' struct_declaration_list '}' 									{
+																						
+																						sprintf(string,"struct_or_union_specifier <- struct_or_union '{' struct_declaration_list '}' ");
 																						string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	;
 	
 struct_or_union : STRUCT 	{
 							isStruct = 1;
-							sprintf(string,"struct_or_union <- STRUCT  %s", $<ident>1.lexema);
+							
+							inicialitzarInfo();
+									
+							info.tipus = ID_TYPEDEF;
+							info.tipusFunction = STRUCT;
+							info.nParamsFuncio = 0;
+							
+							printf("%s \n ", info.lexema);
+							
+							sprintf(string,"struct_or_union <- STRUCT ");
 							string_output(string, $<ident>1.rows, $<ident>1.columns);}
-	| UNION 				{sprintf(string,"struct_or_union <- UNION  %s", $<ident>1.lexema);
+	| UNION 				{sprintf(string,"struct_or_union <- UNION ");
 							string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	;
 	
@@ -2054,7 +2101,10 @@ struct_declaration_list : struct_declaration 		{sprintf(string,"struct_declarati
 													string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	;
 	
-struct_declaration : specifier_qualifier_list struct_declarator_list ';' 	{sprintf(string,"struct_declaration <- specifier_qualifier_list struct_declarator_list ';' ");
+struct_declaration : specifier_qualifier_list struct_declarator_list ';' 	{
+																			
+																			
+																			sprintf(string,"struct_declaration <- specifier_qualifier_list struct_declarator_list ';' ");
 																			string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	;
 	
@@ -2064,72 +2114,85 @@ struct_declarator_list : struct_declarator 			{sprintf(string,"struct_declarator
 													string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	;
 
-	struct_declarator : declarator 	{sprintf(string,"struct_declarator <- declarator");
+struct_declarator : declarator 	{
+									info.parametres[info.nParamsFuncio].lexema = (char *)malloc(sizeof(char)*20);
+									strcpy(info.parametres[info.nParamsFuncio].lexema, $1.lexema);
+									info.parametres[info.nParamsFuncio].type = $1.tipus;
+									info.nParamsFuncio++;
+									
+									sprintf(string,"Parametre %s introduit al struct.", $1.lexema);
+									missatgeTS(string,$1.rows, $1.columns);
+									
+									sprintf(string,"struct_declarator <- declarator");
 									string_output(string,$<ident>1.rows,$<ident>1.columns);}
 	;
 	
 declarator : IDENTIFIER 	{
-							
-							inicialitzarInfo();
-							ambit_actual = sym_get_scope();
 							nom_id=(char *)malloc(sizeof(char)*$1.lenght);
 							strncpy(nom_id, $1.lexema, $1.lenght);
-							
-							strcpy(info.lexema, nom_id);
-							info.tipus = UNDEF;
-							
-							$$.tipus = tipus_declaracio;
-							
-							info.ambit = ambit_actual;
-							
-							if(isFunction == 0){
-								if (isStruct == 0){	
-									if (ambit_actual == SYM_ROOT_SCOPE){            
-										error_sym = sym_global_add(nom_id,&info);
-									}                                                
-									else{                                            
-										error_sym = sym_add(nom_id,&info);        
-									}                                          
-									if(error_sym == SYMTAB_OK){
-										if(isFunction == 0){
-											if(ambit_actual == SYM_ROOT_SCOPE ){
-												sprintf(string,"Creada l'entrada a la TS dins de l'ambit global %s per a l'identificador %s ",nom_programa,$1.lexema);
-												missatgeTS(string,$1.rows, $1.columns);
-											}
-											else{
-												sprintf(string,"Creada l'entrada a la TS dins de l'ambit %s per a l'identificador %s ",nom_ambit,$1.lexema);
-												missatgeTS(string,$1.rows, $1.columns);
-											}
-										}
-									}
-									else{
-										ambit_actual=sym_get_scope();
-										error_sym=sym_global_lookup($1.lexema,&info);
+							if (isStruct == 0){
+								inicialitzarInfo();
+								ambit_actual = sym_get_scope();
+								
+								
+								strcpy(info.lexema, nom_id);
+								info.tipus = UNDEF;
+								
+								$$.tipus = tipus_declaracio;
+								
+								info.ambit = ambit_actual;
+								
+								if(isFunction == 0){
 										
-											if(info.tipus != FUNCTION){
-												sprintf(string,"ERROR. La variable ja existeix.");
-												missatgeError(string,$1.rows, $1.columns);
-												YYERROR;
-											}
-											else{
-												if(tipus_declaracio != info.tipusFunction){
-													sprintf(string,"ERROR. La funcio retorna un tipus incoherent a la declaracio anterior.");
-													missatgeError(string,$1.rows, $1.columns);
-													
-													/*YYERROR;*/
+										if (ambit_actual == SYM_ROOT_SCOPE){            
+											error_sym = sym_global_add(nom_id,&info);
+										}                                                
+										else{                                            
+											error_sym = sym_add(nom_id,&info);        
+										}                                          
+										if(error_sym == SYMTAB_OK){
+											if(isFunction == 0){
+												if(ambit_actual == SYM_ROOT_SCOPE ){
+													sprintf(string,"Creada l'entrada a la TS dins de l'ambit global %s per a l'identificador %s ",nom_programa,$1.lexema);
+													missatgeTS(string,$1.rows, $1.columns);
 												}
 												else{
-													numParam = 0;
-													/*isFunctionDeclaration = 1;*/
+													sprintf(string,"Creada l'entrada a la TS dins de l'ambit %s per a l'identificador %s ",nom_ambit,$1.lexema);
+													missatgeTS(string,$1.rows, $1.columns);
 												}
 											}
-										
-									}
+										}
+										else{
+											ambit_actual=sym_get_scope();
+											error_sym=sym_global_lookup($1.lexema,&info);
+											
+												if(info.tipus != FUNCTION){
+													sprintf(string,"ERROR. La variable ja existeix.");
+													missatgeError(string,$1.rows, $1.columns);
+													YYERROR;
+												}
+												else{
+													if(tipus_declaracio != info.tipusFunction){
+														sprintf(string,"ERROR. La funcio retorna un tipus incoherent a la declaracio anterior.");
+														missatgeError(string,$1.rows, $1.columns);
+														
+														/*YYERROR;*/
+													}
+													else{
+														numParam = 0;
+														/*isFunctionDeclaration = 1;*/
+													}
+												}
+											
+										}
+									
 								}
-							}
-							else{
-								sprintf(string,"Parametre de la funcio de nom %s ", nom_id);
-								missatgeTS(string,$1.rows, $1.columns);
+								else{
+									sprintf(string,"Parametre de la funcio de nom %s ", nom_id);
+									missatgeTS(string,$1.rows, $1.columns);
+								}
+							}else{ /* quan es una declaracio dins de struct*/
+								$$.tipus = tipus_declaracio;
 							}
 							
 							sprintf(string,"declarator <- IDENTIFIER %s ", $<ident>1.lexema);
