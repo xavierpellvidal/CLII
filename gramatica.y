@@ -123,7 +123,7 @@ sym_value_type info, infoAux;
 %type<ident> multiplicative_expression assignment_expression unary_expression assignment_operator cast_expression initializer_list m n
 %type<ident> relational_expression equality_expression logical_OR_expression logical_AND_expression translation_unit typedef_name error
 %type<ident> declaration_list declaration parameter_declaration conditional_expression constant_expression type_name specifier_qualifier_list statement
-%type<ident> unary_operator selection_statement iteration_statement s p q statement_list
+%type<ident> unary_operator selection_statement iteration_statement s p q statement_list struct_declaration struct_declarator_list
  
 
 %right<ident>'='
@@ -367,7 +367,28 @@ postfix_expression : primary_expression 	{
 															
 															sprintf(string,"postfix_expression <- postfix_expression '(' argument_expression_list ')' ");
 															string_output(string, $<ident>1.rows, $<ident>1.columns);}
-	| postfix_expression '.' IDENTIFIER 	{sprintf(string,"postfix_expression <- postfix_expression '.' IDENTIFIER ");
+	| postfix_expression '.' IDENTIFIER 	{
+											printf("%s.%s\n",$1.lexema, $3.lexema);
+											
+											nom_id = (char *)malloc(sizeof(char)*20);
+											strcpy(nom_id, $1.lexema);
+											
+											inicialitzarInfo();
+											ambit_actual = sym_get_scope();
+											
+											error_sym=sym_lookup(nom_id,&info);
+											
+											printf("%s %d\n", info.lexema, info.nParamsFuncio);
+											
+											for(i=0; i<info.nParamsFuncio; i++){
+												if (strcmp(info.parametres[i].lexema, $3.lexema) == 0){
+													$$.tipus = info.parametres[i].type;
+												}
+											}
+											
+											printf("%d\n", $$.tipus);
+											
+											sprintf(string,"postfix_expression <- postfix_expression '.' IDENTIFIER ");
 											string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	| postfix_expression INC_OP 			{sprintf(string,"postfix_expression <- postfix_expression INC_OP  ");
 											string_output(string, $<ident>1.rows, $<ident>1.columns);}
@@ -2102,6 +2123,13 @@ struct_declaration_list : struct_declaration 		{sprintf(string,"struct_declarati
 	;
 	
 struct_declaration : specifier_qualifier_list struct_declarator_list ';' 	{
+																			info.parametres[info.nParamsFuncio].lexema = (char *)malloc(sizeof(char)*20);
+																			strcpy(info.parametres[info.nParamsFuncio].lexema, $2.lexema);
+																			info.parametres[info.nParamsFuncio].type = $1.tipus;
+																			info.nParamsFuncio++;
+																			
+																			sprintf(string,"Parametre %s de tipus %d introduit al struct.", $2.lexema, $1.tipus);
+																			missatgeTS(string,$2.rows, $2.columns);
 																			
 																			
 																			sprintf(string,"struct_declaration <- specifier_qualifier_list struct_declarator_list ';' ");
@@ -2115,13 +2143,7 @@ struct_declarator_list : struct_declarator 			{sprintf(string,"struct_declarator
 	;
 
 struct_declarator : declarator 	{
-									info.parametres[info.nParamsFuncio].lexema = (char *)malloc(sizeof(char)*20);
-									strcpy(info.parametres[info.nParamsFuncio].lexema, $1.lexema);
-									info.parametres[info.nParamsFuncio].type = $1.tipus;
-									info.nParamsFuncio++;
 									
-									sprintf(string,"Parametre %s introduit al struct.", $1.lexema);
-									missatgeTS(string,$1.rows, $1.columns);
 									
 									sprintf(string,"struct_declarator <- declarator");
 									string_output(string,$<ident>1.rows,$<ident>1.columns);}

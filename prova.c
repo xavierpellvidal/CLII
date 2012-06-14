@@ -6,4 +6,6 @@ typedef struct {
 
 melon bernat;
 
-int pepon;
+void main(){
+	bernat.pepon = 4;
+}
