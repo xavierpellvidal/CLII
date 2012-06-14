@@ -375,14 +375,16 @@ postfix_expression : primary_expression 	{
 											
 											inicialitzarInfo();
 											ambit_actual = sym_get_scope();
+											/*Obtenim la variable creada amb el typedef struct, pero volem el valor per accedir al struct 'melon' i veure les dades*/
+											error_sym=sym_lookup(nom_id,&info);											
+											/* Recuperem el struct original 'melon', no el creat*/
+											error_sym=sym_lookup(info.valor,&infoAux);
 											
-											error_sym=sym_lookup(nom_id,&info);
+											printf("%s %d\n", infoAux.lexema, infoAux.nParamsFuncio);
 											
-											printf("%s %d\n", info.lexema, info.nParamsFuncio);
-											
-											for(i=0; i<info.nParamsFuncio; i++){
-												if (strcmp(info.parametres[i].lexema, $3.lexema) == 0){
-													$$.tipus = info.parametres[i].type;
+											for(i=0; i<infoAux.nParamsFuncio; i++){
+												if (strcmp(infoAux.parametres[i].lexema, $3.lexema) == 0){
+													$$.tipus = infoAux.parametres[i].type;
 												}
 											}
 											
@@ -1857,7 +1859,7 @@ declaration : declaration_specifiers ';' 	{sprintf(string,"declaration <- declar
 																error_sym=sym_add(nom_id,&info);
 															}
 															
-															sprintf(string,"TYPEDEF %s introduit a la TS com a STRUCT.", info.lexema);
+															sprintf(string,"TYPEDEF %s introduit a la TS com a STRUCT.", nom_id);
 															missatgeTS(string,$1.rows, $1.columns);
 															
 															isStruct = 0;
@@ -2086,6 +2088,8 @@ typedef_name : TYPEDEF_IDENTIFIER 	{
 										YYERROR;
 									}
 									
+									printf("Type %d\n", info.nParamsFuncio);
+									
 									sprintf(string,"typedef_name <- TYPEDEF_IDENTIFIER ");
 									string_output(string, $<ident>1.rows, $<ident>1.columns);}
 	;
@@ -2109,6 +2113,7 @@ struct_or_union : STRUCT 	{
 							info.nParamsFuncio = 0;
 							
 							printf("%s \n ", info.lexema);
+							printf("%d \n ", info.nParamsFuncio);
 							
 							sprintf(string,"struct_or_union <- STRUCT ");
 							string_output(string, $<ident>1.rows, $<ident>1.columns);}
@@ -2127,6 +2132,8 @@ struct_declaration : specifier_qualifier_list struct_declarator_list ';' 	{
 																			strcpy(info.parametres[info.nParamsFuncio].lexema, $2.lexema);
 																			info.parametres[info.nParamsFuncio].type = $1.tipus;
 																			info.nParamsFuncio++;
+																			
+																			printf("%d \n", info.nParamsFuncio);
 																			
 																			sprintf(string,"Parametre %s de tipus %d introduit al struct.", $2.lexema, $1.tipus);
 																			missatgeTS(string,$2.rows, $2.columns);
