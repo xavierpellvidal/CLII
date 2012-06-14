@@ -1,4 +1,9 @@
 1 - START main 
-2 - bernat[8] := 4
+2 - $t1 := C2I bernat[12]
+3 - IF $t1 LTC 4 GOTO 5
+4 - GOTO 7
+5 - $t2 := I2D 34
+6 - bernat[4] := $t2
+7 - bernat[0] := 1
 
 

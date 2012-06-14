@@ -375,6 +375,8 @@ postfix_expression : primary_expression 	{
 											inicialitzarInfo();
 											ambit_actual = sym_get_scope();
 											
+											printf("%s.%s\n", $1.lexemac3a, $3.lexema);
+											
 											/*Obtenim la variable creada amb el typedef struct, pero volem el valor per accedir al struct 'melon' i veure les dades*/
 											error_sym=sym_lookup(nom_id,&info);
 											/* Recuperem el struct original 'melon', no el creat*/
@@ -382,12 +384,16 @@ postfix_expression : primary_expression 	{
 											j = 0;
 											
 											for(i=0; i<infoAux.nParamsFuncio; i++){
+												printf("Param %d: tipus %d  -> mida: %d\n", i,  infoAux.parametres[i].type, obtenirMida(infoAux.parametres[i].type));
 												j += obtenirMida(infoAux.parametres[i].type);
 												if (strcmp(infoAux.parametres[i].lexema, $3.lexema) == 0){
 													$$.tipus = infoAux.parametres[i].type;
 													j -= obtenirMida(infoAux.parametres[i].type);
+													break;
 												}
 											}
+											
+											printf("Despl: %d\n", j);
 											
 											sprintf($$.lexemac3a, "%s[%d]", nom_id, j);
 											
