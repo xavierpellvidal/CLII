@@ -1,7 +1,10 @@
 Funcio main:
+Paràmetres de la funció: 
+	Nom: return				 Mida: -1	 Offset: 0	 
+	Nom: a				 Mida: 4	 Offset: -1	 
 Variables locals de la funció: 
+	Nom: b				 Mida: 4	 Offset: 3	 
 ------------------------------------------------ 
 Taula global:
 Variables locals de la funció: 
-	Nom: bernat				 Mida: 13	 Offset: 0	 
 ------------------------------------------------ 

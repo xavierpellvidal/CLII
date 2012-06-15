@@ -374,9 +374,7 @@ postfix_expression : primary_expression 	{
 											
 											inicialitzarInfo();
 											ambit_actual = sym_get_scope();
-											
-											printf("%s.%s\n", $1.lexemac3a, $3.lexema);
-											
+
 											/*Obtenim la variable creada amb el typedef struct, pero volem el valor per accedir al struct 'melon' i veure les dades*/
 											error_sym=sym_lookup(nom_id,&info);
 											/* Recuperem el struct original 'melon', no el creat*/
@@ -393,9 +391,6 @@ postfix_expression : primary_expression 	{
 												}
 											}
 											
-											printf("Despl: %d\n", j);
-											
-											sprintf($$.lexemac3a, "%s[%d]", nom_id, j);
 											
 											sprintf(string,"postfix_expression <- postfix_expression '.' IDENTIFIER ");
 											string_output(string, $<ident>1.rows, $<ident>1.columns);}
@@ -2301,6 +2296,8 @@ declarator : IDENTIFIER 	{
 							if(info.isFunctionDeclaration == 0){
 								info.tipus = FUNCTION;
 								info.tipusFunction = tipus_declaracio;
+								
+								printf("%d\n", tipus_declaracio;
 								
 								/*Funcio de CL2*/
 								if (info.tipusFunction != ID_VOID){
