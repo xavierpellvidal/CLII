@@ -1,10 +1,18 @@
 Funcio main:
 Paràmetres de la funció: 
-	Nom: return				 Mida: -1	 Offset: 0	 
-	Nom: a				 Mida: 4	 Offset: -1	 
+	Nom: return				 Mida: 0	 Offset: 0	 
+	Nom: a				 Mida: 4	 Offset: 0	 
+	Nom: b				 Mida: 4	 Offset: 4	 
 Variables locals de la funció: 
-	Nom: b				 Mida: 4	 Offset: 3	 
+	Nom: y				 Mida: 13	 Offset: 8	 
+------------------------------------------------ 
+Funcio pako:
+Paràmetres de la funció: 
+	Nom: return				 Mida: 4	 Offset: 0	 
+	Nom: b				 Mida: 4	 Offset: 4	 
+Variables locals de la funció: 
 ------------------------------------------------ 
 Taula global:
 Variables locals de la funció: 
+	Nom: com				 Mida: 4	 Offset: 0	 
 ------------------------------------------------ 

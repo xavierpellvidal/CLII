@@ -1,3 +1,20 @@
 1 - START main 
+2 - $t1 := I2D 23
+3 - y[0] := $t1
+4 - IF y[8] LTI 0 GOTO 6
+5 - GOTO 8
+6 - y[12] := 'd'
+7 - GOTO 9
+8 - y[12] := 'c'
+9 - $t2 := I2F 2
+10 - $t3 := com MULF $t2
+11 - com := $t3
+12 - RETURN
+
+
+13 - START pako 
+14 - RETURN 5
+
+
 
 

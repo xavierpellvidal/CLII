@@ -374,7 +374,7 @@ postfix_expression : primary_expression 	{
 											
 											inicialitzarInfo();
 											ambit_actual = sym_get_scope();
-
+											
 											/*Obtenim la variable creada amb el typedef struct, pero volem el valor per accedir al struct 'melon' i veure les dades*/
 											error_sym=sym_lookup(nom_id,&info);
 											/* Recuperem el struct original 'melon', no el creat*/
@@ -391,6 +391,7 @@ postfix_expression : primary_expression 	{
 												}
 											}
 											
+											sprintf($$.lexemac3a, "%s[%d]", nom_id, j);
 											
 											sprintf(string,"postfix_expression <- postfix_expression '.' IDENTIFIER ");
 											string_output(string, $<ident>1.rows, $<ident>1.columns);}
@@ -2297,20 +2298,15 @@ declarator : IDENTIFIER 	{
 								info.tipus = FUNCTION;
 								info.tipusFunction = tipus_declaracio;
 								
-								printf("%d\n", tipus_declaracio;
-								
-								/*Funcio de CL2*/
-								if (info.tipusFunction != ID_VOID){
-									filaAux = inicialitzarFila(filaAux);
-									filaAux.nom = "return";
-											
-									filaAux.mida = obtenirMida(info.tipusFunction);
-									filaAux.offset = offsetL;
+								filaAux = inicialitzarFila(filaAux);
+								filaAux.nom = "return";
 										
-									offsetL += filaAux.mida;
+								filaAux.mida = obtenirMida(info.tipusFunction);
+								filaAux.offset = offsetL;
 									
-									localRA = introduirFila(filaAux, localRA);
-								}
+								offsetL += filaAux.mida;
+								
+								localRA = introduirFila(filaAux, localRA);
 								
 								info.nParamsFuncio = 0;
 								sym_remove(nom_funcio);
@@ -2436,19 +2432,13 @@ parameter_declaration : declaration_specifiers declarator {
 												sym_global_remove(nom_funcio);
 												sym_global_add(nom_funcio,&info);
 												
-												
-												
 												filaAux = inicialitzarFila(filaAux);
 												filaAux.nom = $2.lexema;
 												
 												filaAux.mida = obtenirMida($1.tipus);
 												filaAux.offset = offsetL;
-												
 												offsetL += filaAux.mida;
-												
 												localRA = introduirFila(filaAux, localRA);
-												
-												
 												
 												sprintf(string,"Guardat l'identificador %s com a parametre de la funcio %s.", $2.lexema, nom_funcio);
 												missatgeTS(string,$1.rows, $1.columns);
@@ -2481,8 +2471,6 @@ parameter_declaration : declaration_specifiers declarator {
 								/*Recuperem la funcio per guardar-hi el parametre*/
 								error_sym=sym_global_lookup(nom_funcio,&info);
 								
-								
-								
 								info.parametres[info.nParamsFuncio].lexema = (char *)malloc(sizeof(4)+1);
 								
 								info.parametres[info.nParamsFuncio].type= $1.tipus;
@@ -2492,9 +2480,6 @@ parameter_declaration : declaration_specifiers declarator {
 								info.nParamsFuncio++;
 								sym_global_remove(nom_funcio);
 								sym_global_add(nom_funcio,&info);
-								
-								
-								
 								
 								filaAux = inicialitzarFila(filaAux);
 								filaAux.nom = "NULL";
@@ -2606,7 +2591,7 @@ labeled_statement : CASE constant_expression ':' statement 	{sprintf(string,"lab
 	
 compound_statement : '{' { 
 							if(isReturn == 0){
-							/* buscar el nom de la funcio i mirar el tipus, si no es void return warning */
+							/* buscar el nom de la funcio i mirar el tipus, si no es void < warning */
 							inicialitzarInfo();
 							
 							ambit_actual=sym_get_scope();
@@ -3047,7 +3032,7 @@ function_definition : declarator {
 														
 														
 														/*-----------------C3A----------------*/
-														imprimirTaula(localRA, string, info.nParamsFuncio);
+														imprimirTaula(localRA, string, info.nParamsFuncio + 1 );
 														imprimirT(localC3A);
 														
 														localRA = esborrarTaula(localRA);
@@ -3135,8 +3120,14 @@ function_definition : declarator {
 																missatgeTS(string,$2.rows, $2.columns);
 																sprintf(string, "Funcio %s", nom_funcio);
 																
+																if (info.tipusFunction == ID_VOID || info.tipusFunction == UNDEF){
+																	filAux = inicialitzarFil(filAux);
+																	sprintf(filAux.info, "RETURN");
+																	localC3A = emet(filAux, localC3A);
+																}
+																
 																/*-----------------C3A----------------*/
-																imprimirTaula(localRA, string, info.nParamsFuncio);
+																imprimirTaula(localRA, string, info.nParamsFuncio + 1);
 																imprimirT(localC3A);
 																																
 																localRA = esborrarTaula(localRA);
@@ -3347,7 +3338,13 @@ int obtenirMida(int tipus){
 			break;
 		case ID_DOUBLE: 
 			return 8;
+			break;
+		case UNDEF:
+			return 0;
 		break;	
+		case ID_VOID:
+			return 0;
+		break;
 	}
 	return -1;
 }

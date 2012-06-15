@@ -65,8 +65,11 @@ void imprimirT(registre t){
 		auxCount++;
 		fprintf(dFile2, string);
 	}
-		sprintf(string, "\n");
-		fprintf(dFile2, string);
+	sprintf(string, "\n");
+	fprintf(dFile2, string);
+	
+	sprintf(string, "\n");
+	fprintf(dFile2, string);
 }
 
 fil inicialitzarFil(fil fil){
