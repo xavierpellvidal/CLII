@@ -11,10 +11,7 @@
 11 - com := $t3
 12 - RETURN
 
-
 13 - START pako 
 14 - RETURN 5
-
-
 
 
