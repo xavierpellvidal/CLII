@@ -5,8 +5,6 @@ Paràmetres de la funció:
 	Nom: b				 Mida: 4	 Offset: 8	 
 Variables locals de la funció: 
 	Nom: x				 Mida: 4	 Offset: 12	 
-	Nom: y				 Mida: 4	 Offset: 16	 
-	Nom: end				 Mida: 1	 Offset: 20	 
 ------------------------------------------------ 
 Taula global:
 Variables locals de la funció: 

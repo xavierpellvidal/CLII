@@ -1,0 +1,18 @@
+1 - START main 
+2 - x := 0
+3 - IF x LEF x GOTO 5
+4 - GOTO 16
+5 - $t1 := I2F a
+6 - $t2 := $t1 MULF b
+7 - $t3 := I2F 2
+8 - $t4 := $t2 ADDF $t3
+9 - $t5 := F2I $t4
+10 - a := $t5
+11 - $t6 := a DIVI 2
+12 - $t7 := I2F $t6
+13 - b := $t7
+14 - x := x + 1
+15 - GOTO 3
+16 - RETURN x
+
+

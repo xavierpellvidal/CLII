@@ -1,0 +1,16 @@
+1 - START main 
+2 - $t1 := x MULI y
+3 - $t2 := 4 MULI $t1
+4 - quadrats[$t2] := 32
+5 - $t3 := I2D 1234
+6 - un[0] := $t3
+7 - $t4 := I2D x
+8 - $t5 := $t4 MULD dos[0]
+9 - $t6 := D2I $t5
+10 - dos[12] := $t6
+11 - $t7 := I2D 2
+12 - $t8 := un[0] DIVD $t7
+13 - $t9 := D2I $t8
+14 - dos[8] := $t9
+
+

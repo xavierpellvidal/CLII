@@ -1,0 +1,14 @@
+1 - START main 
+2 - IF x LTI a GOTO 6
+3 - GOTO 4
+4 - IF x GTI b GOTO 6
+5 - GOTO 12
+6 - IF aux[12] EQ 'z' GOTO 8
+7 - GOTO 10
+8 - $t1 := I2F 10
+9 - aux[8] := $t1
+10 - $t2 := a ADDI 2
+11 - x := $t2
+12 - RETURN x
+
+

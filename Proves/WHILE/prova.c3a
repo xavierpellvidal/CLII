@@ -1,0 +1,12 @@
+1 - START main 
+2 - $t1 := I2F a
+3 - IF $t1 GTI b GOTO 5
+4 - GOTO 10
+5 - $t2 := I2F a
+6 - $t3 := $t2 MULF b
+7 - $t4 := F2I $t3
+8 - x := $t4
+9 - GOTO 2
+10 - RETURN x
+
+

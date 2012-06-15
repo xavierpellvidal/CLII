@@ -1,0 +1,26 @@
+1 - START main 
+2 - IF x LTI a GOTO 6
+3 - GOTO 4
+4 - IF x GTI b GOTO 6
+5 - GOTO 13
+6 - IF x EQ 3 GOTO 8
+7 - GOTO 10
+8 - x := 0
+9 - GOTO 23
+10 - $t1 := a ADDI 2
+11 - x := $t1
+12 - GOTO 23
+13 - $t2 := I2F b
+14 - IF c GTF $t2 GOTO 16
+15 - GOTO 21
+16 - $t3 := I2F a
+17 - IF c NE $t3 GOTO 19
+18 - GOTO 21
+19 - y := 0
+20 - GOTO 23
+21 - $t4 := a ADDI 2
+22 - y := $t4
+23 - $t5 := I2F y
+24 - c := $t5
+
+

@@ -2624,22 +2624,7 @@ compound_statement : '{' {
 								}
 								}	'}'  {sprintf(string,"compound_statement <- '{' declaration_list '}'");
 								string_output(string,$<ident>1.rows,$<ident>1.columns);}
-	| '{' statement_list {
-							if(isReturn == 0){
-							  	/* buscar el nom de la funcio i mirar el tipus, si no es void return warning */
-							  	inicialitzarInfo();
-								
-								ambit_actual=sym_get_scope();
-								error_sym=sym_global_lookup(nom_funcio,&info);
-								
-								if(error_sym == SYMTAB_OK){
-									if(info.tipusFunction != ID_VOID){
-										sprintf(string,"No hi ha sentencia RETURN. falta retornar un valor de tipus %d ", info.tipusFunction);
-										missatgeWarning(string,$1.rows, $1.columns);
-									}
-								}
-							}
-							} '}' 	{			$$.nextList = (int *) malloc(sizeof(int)*20);
+	| '{' statement_list '}' 	{			$$.nextList = (int *) malloc(sizeof(int)*20);
 												$$.nextList = $2.nextList;
 												$$.nNext = $2.nNext;
 												

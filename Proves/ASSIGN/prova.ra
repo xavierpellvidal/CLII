@@ -6,7 +6,9 @@ Paràmetres de la funció:
 Variables locals de la funció: 
 	Nom: x				 Mida: 4	 Offset: 12	 
 	Nom: y				 Mida: 4	 Offset: 16	 
-	Nom: end				 Mida: 1	 Offset: 20	 
+	Nom: quadrats				 Mida: 4	 Offset: 20	 
+	Nom: un				 Mida: 16	 Offset: 420	 
+	Nom: dos				 Mida: 16	 Offset: 436	 
 ------------------------------------------------ 
 Taula global:
 Variables locals de la funció: 

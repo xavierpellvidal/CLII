@@ -3,10 +3,10 @@ Paràmetres de la funció:
 	Nom: return				 Mida: 4	 Offset: 0	 
 	Nom: a				 Mida: 4	 Offset: 4	 
 	Nom: b				 Mida: 4	 Offset: 8	 
+	Nom: c				 Mida: 4	 Offset: 12	 
 Variables locals de la funció: 
-	Nom: x				 Mida: 4	 Offset: 12	 
-	Nom: y				 Mida: 4	 Offset: 16	 
-	Nom: end				 Mida: 1	 Offset: 20	 
+	Nom: x				 Mida: 4	 Offset: 16	 
+	Nom: y				 Mida: 4	 Offset: 20	 
 ------------------------------------------------ 
 Taula global:
 Variables locals de la funció: 
