@@ -2791,7 +2791,7 @@ s : p expression ')' statement 	{
 iteration_statement : WHILE '(' m expression ')' m statement {
 															
 															localC3A = completa($4.trueList, $4.nTrue, $6.quad, localC3A);
-															localC3A = completa($7.nextList, $4.nNext, $3.quad, localC3A);
+															localC3A = completa($7.nextList, $7.nNext, $3.quad, localC3A);
 															
 															$$.nextList = $4.falseList;
 															$$.nNext = $4.nFalse;
